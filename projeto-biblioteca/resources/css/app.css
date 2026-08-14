@@ -1,0 +1,52 @@
+:root {
+    color: #1f2937;
+    font-family: system-ui, sans-serif;
+    background: #f3f4f6;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+}
+
+.container {
+    width: min(44rem, calc(100% - 2rem));
+    margin: 4rem auto;
+    padding: 2rem;
+    border-radius: 0.75rem;
+    background: #ffffff;
+    box-shadow: 0 0.75rem 2rem rgb(15 23 42 / 10%);
+}
+
+.etapa {
+    margin: 0;
+    color: #6d28d9;
+    font-weight: 700;
+}
+
+h1 {
+    margin-block: 0.5rem;
+}
+
+.mensagem {
+    font-size: 1.125rem;
+}
+
+section {
+    margin-top: 2rem;
+    padding-top: 1rem;
+    border-top: 1px solid #d1d5db;
+}
+
+li + li {
+    margin-top: 0.5rem;
+}
+
+code {
+    padding: 0.125rem 0.3rem;
+    border-radius: 0.25rem;
+    background: #ede9fe;
+}
