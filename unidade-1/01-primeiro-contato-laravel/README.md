@@ -14,6 +14,7 @@ Os links levam diretamente a cada assunto da apostila.
 | Composer | [Artisan, Composer, npm e Vite](#13-artisan-composer-npm-e-vite) |
 | Configurações | [Configurações e arquivo `.env`](#5-configurações-e-arquivo-env) |
 | Controllers | [Rotas, Controllers, Models, Views e Blade](#7-rotas-controllers-models-views-e-blade) |
+| CRUD | [Fluxo básico para desenvolver um CRUD](#fluxo-básico-para-desenvolver-um-crud) |
 | Documentação oficial | [Como consultar a documentação oficial](#14-como-consultar-a-documentação-oficial) |
 | Eloquent | [Rotas, Controllers, Models, Views e Blade](#7-rotas-controllers-models-views-e-blade) |
 | E-mails e Mailables | [Envio de e-mails](#11-envio-de-e-mails) |
@@ -60,20 +61,34 @@ Laravel pode produzir uma aplicação completa, com banco de dados e páginas HT
 
 ## 2. Como uma requisição passa pelo Laravel?
 
-Quando o usuário acessa uma página, o navegador envia uma **requisição**. O Laravel executa o código necessário e devolve uma **resposta**.
+O diagrama abaixo mostra um fluxo comum de uma página quando a aplicação está funcionando.
 
 ```mermaid
 flowchart TD
-    A["Navegador faz a requisição"] --> B["Rota identifica a ação"]
-    B --> C["Controller coordena o trabalho"]
-    C --> D["Model acessa os dados, se necessário"]
-    D --> E["Blade prepara o HTML"]
-    E --> F["Resposta volta ao navegador"]
+    A["Lado cliente — O usuário faz uma requisição pelo navegador"] --> B["Lado servidor — A rota identifica a ação em routes/web.php"]
+    B --> C["Lado servidor — O Controller coordena o trabalho em app/Http/Controllers/"]
+    C --> D["Lado servidor — O Model acessa os dados em app/Models/, se necessário"]
+    D --> E["Lado servidor — O Blade prepara o HTML em resources/views/"]
+    E --> F["Lado cliente — O navegador recebe a resposta, processa e apresenta ao usuário"]
 ```
 
 As requisições entram por `public/index.php`. O Laravel é inicializado a partir de `bootstrap/app.php`, passa pelos **middlewares** e procura a rota correspondente. Middlewares são verificações executadas durante a requisição, como conferir se o usuário está autenticado. Não é necessário compreender todo esse processo interno agora.
 
 Nem toda requisição utiliza todas as partes do diagrama. Uma rota pode devolver diretamente um texto, um arquivo, um redirecionamento ou uma resposta JSON. Uma página sem acesso ao banco, por exemplo, pode não precisar de um Model.
+
+### Fluxo básico para desenvolver um CRUD
+
+O diagrama anterior mostra a aplicação em execução. Durante o desenvolvimento, uma sequência comum para organizar um CRUD é:
+
+```mermaid
+flowchart TD
+    A["1. Definir as migrations em database/migrations/"] --> B["2. Criar os Models em app/Models/"]
+    B --> C["3. Criar os Controllers em app/Http/Controllers/"]
+    C --> D["4. Definir as rotas em routes/web.php"]
+    D --> E["5. Criar as Views Blade em resources/views/"]
+```
+
+CRUD é a sigla para **Create, Read, Update e Delete**: criar, consultar, atualizar e excluir. Essa ordem funciona como uma referência inicial e pode mudar conforme as necessidades do projeto.
 
 ## 3. Principais pastas do projeto
 
