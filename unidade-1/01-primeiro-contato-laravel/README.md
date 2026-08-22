@@ -8,34 +8,35 @@ Os links levam diretamente a cada assunto da apostila.
 
 | Termo | Onde consultar |
 |---|---|
-| Artisan | [Artisan, Composer, npm e Vite](#13-artisan-composer-npm-e-vite) |
-| Autenticação e autorização | [Autenticação, autorização e Policies](#9-autenticação-autorização-e-policies) |
-| Blade | [Rotas, Controllers, Models, Views e Blade](#7-rotas-controllers-models-views-e-blade) |
-| Composer | [Artisan, Composer, npm e Vite](#13-artisan-composer-npm-e-vite) |
-| Configurações | [Configurações e arquivo `.env`](#5-configurações-e-arquivo-env) |
-| Controllers | [Rotas, Controllers, Models, Views e Blade](#7-rotas-controllers-models-views-e-blade) |
-| CRUD | [Fluxo básico para desenvolver um CRUD](#fluxo-básico-para-desenvolver-um-crud) |
-| Documentação oficial | [Como consultar a documentação oficial](#14-como-consultar-a-documentação-oficial) |
-| Eloquent | [Rotas, Controllers, Models, Views e Blade](#7-rotas-controllers-models-views-e-blade) |
-| E-mails e Mailables | [Envio de e-mails](#11-envio-de-e-mails) |
-| `.env` e `.env.example` | [Configurações e arquivo `.env`](#5-configurações-e-arquivo-env) |
-| Factories | [Migration, Model, Factory e Seeder](#8-migration-model-factory-e-seeder) |
-| Git e `.gitignore` | [`.gitignore`: não altere para enviar arquivos ignorados](#6-gitignore-não-altere-para-enviar-arquivos-ignorados) |
+| Arquivos da raiz | [Arquivos importantes da raiz](#5-arquivos-importantes-da-raiz) |
+| Artisan | [Artisan, Composer, npm e Vite](#14-artisan-composer-npm-e-vite) |
+| Autenticação e autorização | [Autenticação, autorização e Policies](#10-autenticação-autorização-e-policies) |
+| Blade | [Views e Blade](#views-e-blade) |
+| Composer | [Artisan, Composer, npm e Vite](#14-artisan-composer-npm-e-vite) |
+| Configurações | [Configurações e arquivo `.env`](#6-configurações-e-arquivo-env) |
+| Controllers | [Controllers](#controllers) |
+| CRUD | [Fluxo básico para desenvolver um CRUD](#3-fluxo-básico-para-desenvolver-um-crud) |
+| Documentação oficial | [Como consultar a documentação oficial](#15-como-consultar-a-documentação-oficial) |
+| Eloquent | [Eloquent](#eloquent) |
+| E-mails e Mailables | [Envio de e-mails](#12-envio-de-e-mails) |
+| `.env` e `.env.example` | [Configurações e arquivo `.env`](#6-configurações-e-arquivo-env) |
+| Factories | [Factory](#factory) |
+| Git e `.gitignore` | [`.gitignore`: não altere para enviar arquivos ignorados](#7-gitignore-não-altere-para-enviar-arquivos-ignorados) |
 | Laravel | [O que é Laravel?](#1-o-que-é-laravel) |
-| Logs | [Logs e investigação de erros](#12-logs-e-investigação-de-erros) |
-| Migrations | [Migration, Model, Factory e Seeder](#8-migration-model-factory-e-seeder) |
-| Models | [Rotas, Controllers, Models, Views e Blade](#7-rotas-controllers-models-views-e-blade) |
-| `node_modules/` | [`.gitignore`: não altere para enviar arquivos ignorados](#6-gitignore-não-altere-para-enviar-arquivos-ignorados) |
-| Novidades do Laravel 13 | [Algumas novidades do Laravel 13](#15-algumas-novidades-do-laravel-13) |
-| npm e Vite | [Artisan, Composer, npm e Vite](#13-artisan-composer-npm-e-vite) |
-| Pastas do projeto | [Principais pastas do projeto](#3-principais-pastas-do-projeto) |
-| Policies | [Autenticação, autorização e Policies](#9-autenticação-autorização-e-policies) |
+| Logs | [Logs e investigação de erros](#13-logs-e-investigação-de-erros) |
+| Migrations | [Migration](#migration) |
+| Models | [Models](#models) |
+| `node_modules/` | [`.gitignore`: não altere para enviar arquivos ignorados](#7-gitignore-não-altere-para-enviar-arquivos-ignorados) |
+| Novidades do Laravel 13 | [Algumas novidades do Laravel 13](#16-algumas-novidades-do-laravel-13) |
+| npm e Vite | [Artisan, Composer, npm e Vite](#14-artisan-composer-npm-e-vite) |
+| Pastas do projeto | [Principais pastas do projeto](#4-principais-pastas-do-projeto) |
+| Policies | [Autenticação, autorização e Policies](#10-autenticação-autorização-e-policies) |
 | Requisições | [Como uma requisição passa pelo Laravel?](#2-como-uma-requisição-passa-pelo-laravel) |
-| Rotas | [Rotas, Controllers, Models, Views e Blade](#7-rotas-controllers-models-views-e-blade) |
-| Seeders | [Migration, Model, Factory e Seeder](#8-migration-model-factory-e-seeder) |
-| Storage e upload | [Storage e arquivos enviados](#10-storage-e-arquivos-enviados) |
-| `vendor/` | [`.gitignore`: não altere para enviar arquivos ignorados](#6-gitignore-não-altere-para-enviar-arquivos-ignorados) |
-| Views | [Rotas, Controllers, Models, Views e Blade](#7-rotas-controllers-models-views-e-blade) |
+| Rotas | [Rotas](#rotas) |
+| Seeders | [Seeder](#seeder) |
+| Storage e upload | [Storage e arquivos enviados](#11-storage-e-arquivos-enviados) |
+| `vendor/` | [`.gitignore`: não altere para enviar arquivos ignorados](#7-gitignore-não-altere-para-enviar-arquivos-ignorados) |
+| Views | [Views e Blade](#views-e-blade) |
 
 ## 1. O que é Laravel?
 
@@ -76,9 +77,9 @@ As requisições entram por `public/index.php`. O Laravel é inicializado a part
 
 Nem toda requisição utiliza todas as partes do diagrama. Uma rota pode devolver diretamente um texto, um arquivo, um redirecionamento ou uma resposta JSON. Uma página sem acesso ao banco, por exemplo, pode não precisar de um Model.
 
-### Fluxo básico para desenvolver um CRUD
+## 3. Fluxo básico para desenvolver um CRUD
 
-O diagrama anterior mostra a aplicação em execução. Durante o desenvolvimento, uma sequência comum para organizar um CRUD é:
+Enquanto o diagrama anterior mostra a aplicação em execução, este apresenta uma sequência comum para organizar o desenvolvimento de um CRUD:
 
 ```mermaid
 flowchart TD
@@ -90,7 +91,7 @@ flowchart TD
 
 CRUD é a sigla para **Create, Read, Update e Delete**: criar, consultar, atualizar e excluir. Essa ordem funciona como uma referência inicial e pode mudar conforme as necessidades do projeto.
 
-## 3. Principais pastas do projeto
+## 4. Principais pastas do projeto
 
 Algumas pastas são usadas frequentemente; outras precisam apenas ser reconhecidas neste momento.
 
@@ -115,7 +116,7 @@ Algumas pastas são usadas frequentemente; outras precisam apenas ser reconhecid
 
 Algumas pastas podem não aparecer imediatamente. Por exemplo, `app/Policies/` e `app/Mail/` costumam ser criadas quando a primeira Policy ou classe de e-mail é gerada.
 
-## 4. Arquivos importantes da raiz
+## 5. Arquivos importantes da raiz
 
 Na pasta principal também existem arquivos importantes.
 
@@ -135,7 +136,7 @@ Na pasta principal também existem arquivos importantes.
 
 Você não precisa editar todos eles. Primeiro, reconheça suas finalidades.
 
-## 5. Configurações e arquivo `.env`
+## 6. Configurações e arquivo `.env`
 
 Os arquivos da pasta `config/` organizam configurações relacionadas ao banco de dados, e-mail, armazenamento, logs e outros recursos.
 
@@ -156,7 +157,7 @@ O `.env` também contém a `APP_KEY`, usada por mecanismos de criptografia do La
 
 O `.env.example` mostra quais variáveis são necessárias, mas contém somente valores vazios ou seguros. Assim, outra pessoa pode preparar seu `.env` sem receber credenciais privadas.
 
-## 6. `.gitignore`: não altere para enviar arquivos ignorados
+## 7. `.gitignore`: não altere para enviar arquivos ignorados
 
 > **Regra da disciplina:** não altere o `.gitignore` do Laravel para forçar o envio de arquivos ignorados ao GitHub.
 
@@ -175,7 +176,7 @@ Essa regra protege o projeto por dois motivos principais:
 
 As dependências PHP são reconstruídas a partir de `composer.json` e `composer.lock`. As de frontend usam `package.json` e `package-lock.json`. Esses arquivos são versionados, mas as pastas baixadas não são.
 
-## 7. Rotas, Controllers, Models, Views e Blade
+## 8. Rotas, Controllers, Models, Eloquent, Views e Blade
 
 ### Rotas
 
@@ -197,9 +198,11 @@ Um **Controller** (controlador) recebe o fluxo da rota, solicita operações, pr
 
 Um Controller não deve concentrar automaticamente todo o código do sistema. Sua principal função é coordenar o trabalho necessário para responder à requisição.
 
-### Models e Eloquent
+### Models
 
 Um **Model** (modelo) é uma classe PHP usada pela aplicação para consultar e modificar dados. Models ficam normalmente em `app/Models/`. O Model `Book`, por exemplo, costuma trabalhar com registros da tabela `books`.
+
+### Eloquent
 
 O **Eloquent** é o ORM do Laravel: uma ligação entre objetos PHP e tabelas. Com ele, várias operações são escritas usando Models e métodos PHP, mas o banco continua executando SQL internamente.
 
@@ -217,14 +220,13 @@ Uma **View** (visualização) é responsável pela apresentação e fica em `res
 
 As chaves `{{ }}` exibem um valor. Diretivas iniciadas com `@`, como `@if` e `@foreach`, permitem condições e repetições. O Blade prepara o HTML no servidor; o navegador recebe o resultado pronto e não executa o código PHP.
 
-## 8. Migration, Model, Factory e Seeder
+## 9. Migrations, Factories e Seeders
 
-Esses quatro termos estão relacionados aos dados, mas possuem responsabilidades diferentes.
+Depois de conhecer Models e Eloquent, é importante diferenciar três recursos usados para preparar o banco e seus dados.
 
 | Recurso | Pergunta que ele responde |
 |---|---|
 | Migration | Como deve ser a estrutura do banco? |
-| Model | Como a aplicação trabalha com esses dados? |
 | Factory | Como gerar dados fictícios? |
 | Seeder | Quais dados devem ser inseridos? |
 
@@ -236,15 +238,15 @@ O método `up` aplica a alteração e o método `down` descreve como desfazê-la
 
 ### Factory
 
-Uma factory define valores para gerar dados fictícios. Uma `BookFactory` pode produzir títulos, ISBNs e anos. As factories ficam em `database/factories/` e geralmente usam o Faker, uma biblioteca que gera dados de demonstração.
+Uma factory funciona como uma **receita para gerar dados fictícios de uma entidade**. Uma `BookFactory`, por exemplo, descreve como produzir livros falsos com títulos, ISBNs e anos. As factories ficam em `database/factories/` e geralmente usam o Faker, uma biblioteca que gera dados de demonstração.
 
 ### Seeder
 
 Um seeder insere dados iniciais ou de demonstração. Ele pode cadastrar valores fixos ou chamar factories. Os seeders ficam em `database/seeders/`.
 
-Migration não guarda dados, factory não cria tabela e seeder não substitui Model. Cada recurso resolve um problema diferente.
+Migration não guarda dados, factory não cria tabela e seeder não define a estrutura do banco. Cada recurso resolve um problema diferente.
 
-## 9. Autenticação, autorização e Policies
+## 10. Autenticação, autorização e Policies
 
 Dois conceitos não devem ser confundidos:
 
@@ -255,7 +257,7 @@ Uma **Policy** organiza regras de autorização relacionadas a um recurso ou Mod
 
 No sistema de biblioteca, `admin`, `bibliotecario` e `cliente` podem ter permissões diferentes. A implementação será estudada posteriormente.
 
-## 10. Storage e arquivos enviados
+## 11. Storage e arquivos enviados
 
 Laravel oferece uma forma padronizada de armazenar e recuperar arquivos. A configuração principal fica em `config/filesystems.php`.
 
@@ -265,7 +267,7 @@ Laravel oferece uma forma padronizada de armazenar e recuperar arquivos. A confi
 
 No sistema de biblioteca, esse recurso pode armazenar as capas. O comando `php artisan storage:link` cria a ligação pública; o upload completo será estudado posteriormente.
 
-## 11. Envio de e-mails
+## 12. Envio de e-mails
 
 As configurações de e-mail ficam em `config/mail.php`, enquanto credenciais e valores específicos do serviço normalmente ficam no `.env`.
 
@@ -273,7 +275,7 @@ Laravel representa cada tipo de e-mail com uma classe chamada **Mailable**, gera
 
 Durante o desenvolvimento, o Laravel pode registrar o e-mail no log em vez de enviá-lo, permitindo conferir seu conteúdo sem um serviço externo.
 
-## 12. Logs e investigação de erros
+## 13. Logs e investigação de erros
 
 Logs são registros de erros e acontecimentos da aplicação. Eles ficam normalmente em `storage/logs/`. O arquivo mais conhecido é `storage/logs/laravel.log`, e as configurações ficam em `config/logging.php`.
 
@@ -281,7 +283,7 @@ Quando o navegador apresenta uma mensagem genérica, o log pode revelar a causa:
 
 Logs não são código-fonte, podem crescer bastante e podem conter informações do ambiente. Por isso, não devem ser enviados ao GitHub.
 
-## 13. Artisan, Composer, npm e Vite
+## 14. Artisan, Composer, npm e Vite
 
 | Ferramenta | Papel no projeto |
 |---|---|
@@ -292,7 +294,7 @@ Logs não são código-fonte, podem crescer bastante e podem conter informaçõe
 
 Artisan pode gerar arquivos, executar migrations e listar rotas. Não memorize todos os comandos: consulte a documentação ou use `php artisan list`.
 
-## 14. Como consultar a documentação oficial
+## 15. Como consultar a documentação oficial
 
 A documentação principal da disciplina é a [documentação oficial do Laravel 13](https://laravel.com/framework/docs/13.x).
 
@@ -314,7 +316,7 @@ Confira se a versão selecionada é `13.x`. Use o menu lateral e a busca do nave
 
 Use a tradução do navegador quando necessário. Comece pela introdução e pelos exemplos simples. Não copie código sem entender em qual arquivo ele deve ficar e qual problema resolve.
 
-## 15. Algumas novidades do Laravel 13
+## 16. Algumas novidades do Laravel 13
 
 Os recursos a seguir não fazem parte do núcleo inicial da disciplina. O objetivo é apenas conhecer sua existência.
 
@@ -326,7 +328,7 @@ Os recursos a seguir não fazem parte do núcleo inicial da disciplina. O objeti
 
 O surgimento de novos recursos não elimina os fundamentos. Rotas, Controllers, Models, Blade, migrations, configurações e segurança continuam sendo a base para compreender aplicações Laravel.
 
-## 16. Quadro de consulta rápida
+## 17. Quadro de consulta rápida
 
 | Termo | Lembrete |
 |---|---|
@@ -337,7 +339,7 @@ O surgimento de novos recursos não elimina os fundamentos. Rotas, Controllers, 
 | View | Apresenta o conteúdo |
 | Blade | Sistema de templates do Laravel |
 | Migration | Registra mudanças na estrutura do banco |
-| Factory | Define dados fictícios |
+| Factory | Funciona como uma receita para gerar dados fictícios |
 | Seeder | Organiza a inserção de dados |
 | Policy | Organiza regras de autorização |
 | Storage | Armazena e recupera arquivos |
@@ -350,7 +352,7 @@ O surgimento de novos recursos não elimina os fundamentos. Rotas, Controllers, 
 1. Laravel organiza a aplicação e fornece recursos prontos para problemas comuns.
 2. A rota identifica a ação, o Controller coordena, o Model trabalha com dados e a View apresenta a resposta.
 3. Cada tipo de código possui uma pasta e uma responsabilidade.
-4. Migration, Model, factory e seeder resolvem problemas diferentes.
+4. Models trabalham com registros; migrations, factories e seeders possuem funções próprias na preparação do banco e dos dados.
 5. O `.env`, as credenciais, `vendor/`, `node_modules/`, logs e temporários não devem ser enviados ao GitHub.
 6. O `.gitignore` do Laravel não deve ser alterado para forçar o envio desses arquivos.
 7. Você não precisa memorizar tudo: use esta apostila e a documentação oficial como fontes de consulta.
