@@ -373,7 +373,7 @@ O surgimento de novos recursos não elimina os fundamentos. Rotas, Controllers, 
 
 Esta apostila apresenta apenas o mapa inicial. Os materiais seguintes aprofundam alguns dos recursos apresentados:
 
-- [Ambiente, framework e MVC](../02-ambiente-framework-mvc/)
+- [Frameworks](../02-frameworks/)
 - [Migrations e Models](../03-migrations-models/)
 - [Factories, Seeders e Eloquent](../04-factories-seeders-eloquent/)
 
