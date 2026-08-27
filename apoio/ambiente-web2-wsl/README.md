@@ -31,6 +31,60 @@ wsl -l -v
 
 O Ubuntu deve aparecer com a versão `2`.
 
+### Se o WSL não iniciar por causa da virtualização
+
+O WSL 2 utiliza a virtualização de hardware do processador. Na maioria dos computadores ela já vem habilitada. Siga esta seção somente se a instalação ou a abertura do Ubuntu apresentar o erro `0x80370102`, informar que um recurso necessário não está instalado ou disser que a máquina virtual não pôde ser iniciada.
+
+#### 1. Verifique o estado da virtualização
+
+1. Pressione `Ctrl+Shift+Esc` para abrir o **Gerenciador de Tarefas**.
+2. Abra **Desempenho > CPU**.
+3. Procure a informação **Virtualização**:
+   - se estiver **Habilitada**, não altere o BIOS/UEFI; prossiga para a verificação dos recursos do Windows;
+   - se estiver **Desabilitada**, siga os passos da próxima seção.
+
+> Em computadores do laboratório, institucionais ou pertencentes a outra pessoa, não altere o BIOS/UEFI. Informe o erro ao professor ou à equipe técnica.
+
+#### 2. Habilite a virtualização no BIOS/UEFI
+
+Em um computador pessoal:
+
+1. salve seu trabalho e feche os programas abertos;
+2. no Windows, abra **Configurações > Sistema > Recuperação**;
+3. em **Inicialização avançada**, clique em **Reiniciar agora**;
+4. escolha **Solucionar problemas > Opções avançadas > Configurações de Firmware UEFI > Reiniciar**;
+5. no BIOS/UEFI, procure uma opção de virtualização, geralmente localizada em menus como **Advanced**, **CPU Configuration**, **Security** ou **System Configuration**;
+6. habilite a opção correspondente:
+   - processadores Intel: **Intel Virtualization Technology**, **Intel VT-x** ou **VMX**;
+   - processadores AMD: **SVM Mode** ou **AMD-V**;
+7. escolha **Save and Exit** para salvar e reiniciar o computador. Em muitos equipamentos essa ação usa a tecla `F10`.
+
+A aparência e os nomes dos menus variam conforme o fabricante. Se **Configurações de Firmware UEFI** não aparecer no Windows, consulte o manual do modelo do computador. Alguns equipamentos permitem entrar no BIOS/UEFI durante a inicialização usando teclas como `F2`, `Del`, `Esc` ou `F10`.
+
+> Altere somente a opção de virtualização. Não desative **Secure Boot** ou **TPM** e não modifique a ordem de inicialização, o modo de armazenamento ou outras configurações.
+
+#### 3. Confirme os recursos do Windows e teste novamente
+
+1. No menu Iniciar, pesquise **Ativar ou desativar recursos do Windows**.
+2. Confirme que estão marcados:
+   - **Plataforma de Máquina Virtual**;
+   - **Subsistema do Windows para Linux**.
+3. Clique em **OK** e reinicie o Windows, caso seja solicitado.
+4. Abra novamente o PowerShell e execute:
+
+```powershell
+wsl --status
+wsl -l -v
+```
+
+Se o Ubuntu ainda não estiver instalado, repita:
+
+```powershell
+wsl --install -d Ubuntu-24.04
+```
+
+Se a opção de virtualização não existir, estiver bloqueada por senha ou o erro continuar, consulte o suporte do fabricante ou a equipe técnica. O processador pode não oferecer os recursos exigidos pelo WSL 2. Não atualize o BIOS nem tente contornar senhas de administração por conta própria.
+
 ## 2. Prepare o Ubuntu
 
 Abra o aplicativo **Ubuntu** pelo menu Iniciar. Os próximos comandos devem ser executados nesse terminal.
@@ -234,6 +288,8 @@ Depois acesse [http://localhost:8001](http://localhost:8001).
 ## Referências oficiais
 
 - [Instalação do WSL](https://learn.microsoft.com/windows/wsl/install)
+- [Habilitar a virtualização no Windows](https://support.microsoft.com/windows/experience/enable-virtualization-on-windows)
+- [Solução de problemas do WSL](https://learn.microsoft.com/windows/wsl/troubleshooting)
 - [Ambiente de desenvolvimento no WSL](https://learn.microsoft.com/windows/wsl/setup/environment)
 - [VS Code com WSL](https://code.visualstudio.com/docs/remote/wsl)
 - [PHP em distribuições baseadas em Debian](https://www.php.net/manual/en/install.unix.debian.php)
