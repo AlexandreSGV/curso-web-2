@@ -374,8 +374,9 @@ O surgimento de novos recursos não elimina os fundamentos. Rotas, Controllers, 
 Esta apostila apresenta apenas o mapa inicial. Os materiais seguintes aprofundam alguns dos recursos apresentados:
 
 - [Frameworks](../02-frameworks/)
-- [Migrations e Models](../03-migrations-models/)
-- [Factories, Seeders e Eloquent](../04-factories-seeders-eloquent/)
+- [MVC](../03-mvc/)
+- [Migrations](../04-migrations-models/)
+- [Factories, Seeders e Eloquent](../05-factories-seeders-eloquent/)
 
 ## Referências
 
