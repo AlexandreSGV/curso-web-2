@@ -423,62 +423,86 @@ Aplicações Laravel reais também utilizam outros componentes, como Form Reques
 
 ## 11. Exemplos em PHP puro
 
-Os exemplos relacionados a esta apostila apresentam o mesmo CRUD minimalista em duas versões. Eles armazenam os livros separadamente na sessão do navegador e não precisam de banco de dados.
+Os exemplos relacionados a esta apostila apresentam o mesmo cadastro de livro em duas versões. Eles implementam somente a operação **Create**: o formulário recebe um título, o PHP realiza uma validação simples e salva o livro no MySQL.
+
+Não há sessão, listagem, edição ou exclusão. A redução permite observar a separação das responsabilidades sem desviar a atenção para outras operações.
 
 ```text
 exemplos/
-├── 01-crud-acoplado/
+├── 01-cadastro-acoplado/
 │   └── index.php
-└── 02-crud-mvc/
+└── 02-cadastro-mvc/
     ├── model.php
     ├── controller.php
     └── view.php
 ```
 
-Para executar os exemplos, entre na pasta `03-mvc` e inicie o servidor embutido do PHP:
+### Prepare o banco de dados
+
+Os exemplos utilizam o banco `biblioteca`, criado durante a preparação do ambiente. Execute o comando abaixo nesse banco:
+
+```sql
+CREATE TABLE IF NOT EXISTS livros (
+    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    titulo VARCHAR(200) NOT NULL
+);
+```
+
+Os códigos obtêm a senha do MySQL pela variável de ambiente `DB_PASSWORD`. Desse modo, a senha não fica escrita nos arquivos enviados ao Git. Se você adotou outro banco ou usuário, ajuste os demais dados da conexão.
+
+Os dois exemplos utilizam uma instrução preparada com PDO para inserir o título:
+
+```sql
+INSERT INTO livros (titulo) VALUES (:titulo)
+```
+
+Para executar os exemplos, entre na pasta `03-mvc` e inicie o servidor embutido do PHP. Substitua `SUA_SENHA_LOCAL` pela senha criada durante a configuração do MySQL:
 
 ```bash
-php -S localhost:8000
+DB_PASSWORD='SUA_SENHA_LOCAL' php -S localhost:8000
 ```
+
+A variável vale somente para esse processo e a senha não é gravada no repositório.
 
 Depois, acesse:
 
-- [http://localhost:8000/exemplos/01-crud-acoplado/index.php](http://localhost:8000/exemplos/01-crud-acoplado/index.php);
-- [http://localhost:8000/exemplos/02-crud-mvc/controller.php](http://localhost:8000/exemplos/02-crud-mvc/controller.php).
+- [http://localhost:8000/exemplos/01-cadastro-acoplado/index.php](http://localhost:8000/exemplos/01-cadastro-acoplado/index.php);
+- [http://localhost:8000/exemplos/02-cadastro-mvc/controller.php](http://localhost:8000/exemplos/02-cadastro-mvc/controller.php).
 
 O servidor embutido deve ser utilizado apenas para estudo e desenvolvimento local. Para encerrá-lo, pressione `Ctrl+C` no terminal.
 
 ### Exemplo 1: responsabilidades misturadas
 
-No primeiro exemplo, todo o CRUD está em um único arquivo:
+No primeiro exemplo, todo o cadastro está em um único arquivo. O `index.php`:
 
-- leitura dos dados enviados;
-- escolha da operação;
-- manipulação dos dados;
-- regras;
-- geração do HTML.
+- apresenta o formulário;
+- recebe o título enviado;
+- verifica se o título foi preenchido;
+- conecta-se ao banco;
+- executa o `INSERT`;
+- apresenta a mensagem de resultado.
 
 Arquivo:
 
-- [`exemplos/01-crud-acoplado/index.php`](exemplos/01-crud-acoplado/index.php)
+- [`exemplos/01-cadastro-acoplado/index.php`](exemplos/01-cadastro-acoplado/index.php)
 
-Esse código pode ser curto, mas apresenta forte acoplamento. Interface, controle e dados dependem do mesmo arquivo e ficam misturados.
+O código é curto, mas apresenta forte acoplamento. Interface, controle e acesso aos dados dependem do mesmo arquivo e ficam misturados.
 
 Uma alteração aparentemente simples pode exigir cuidado com todo o restante do código.
 
 ### Exemplo 2: separação em MVC
 
-O segundo exemplo realiza as mesmas operações, mas distribui as responsabilidades:
+O segundo exemplo realiza o mesmo cadastro, mas distribui as responsabilidades:
 
-- `model.php`: manipula os dados e as regras;
-- `controller.php`: recebe as ações e coordena as operações;
-- `view.php`: apresenta o formulário e a listagem.
+- `model.php`: conecta-se ao banco e executa o `INSERT`;
+- `controller.php`: recebe o título, realiza a validação e solicita o cadastro;
+- `view.php`: apresenta o formulário e as mensagens.
 
 Arquivos:
 
-- [`exemplos/02-crud-mvc/model.php`](exemplos/02-crud-mvc/model.php)
-- [`exemplos/02-crud-mvc/controller.php`](exemplos/02-crud-mvc/controller.php)
-- [`exemplos/02-crud-mvc/view.php`](exemplos/02-crud-mvc/view.php)
+- [`exemplos/02-cadastro-mvc/model.php`](exemplos/02-cadastro-mvc/model.php)
+- [`exemplos/02-cadastro-mvc/controller.php`](exemplos/02-cadastro-mvc/controller.php)
+- [`exemplos/02-cadastro-mvc/view.php`](exemplos/02-cadastro-mvc/view.php)
 
 A segunda versão é iniciada por `controller.php`, que carrega o Model e, ao final do processamento, inclui a View.
 
@@ -493,12 +517,12 @@ A segunda versão possui mais arquivos e pode parecer maior. Entretanto, fica ma
 
 ### Como estudar os exemplos
 
-1. Execute as quatro operações nas duas versões.
-2. Localize onde cada operação foi implementada.
-3. Identifique os trechos relacionados à View, ao Controller e ao Model.
-4. Altere somente um texto ou elemento visual.
-5. Acrescente uma regra relacionada aos dados.
-6. Compare quantas partes precisaram ser modificadas em cada versão.
+1. Crie a tabela `livros`.
+2. Cadastre um livro em cada versão.
+3. Confira os registros com `SELECT * FROM livros;`.
+4. Envie o formulário sem título e observe a validação.
+5. Identifique os trechos relacionados à View, ao Controller e ao Model.
+6. Altere uma mensagem ou regra e compare quais arquivos precisam ser modificados.
 
 O objetivo não é concluir que todo código com um único arquivo está errado. O objetivo é observar como o custo de manutenção muda quando a aplicação cresce.
 
