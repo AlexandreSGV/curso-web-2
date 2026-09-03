@@ -8,7 +8,7 @@ Materiais da disciplina de Desenvolvimento para Web II.
 2. [Frameworks](unidade-1/02-frameworks/)
 3. [MVC](unidade-1/03-mvc/)
 4. [Migrations](unidade-1/04-migrations-models/)
-5. [Factories, Seeders e Eloquent](unidade-1/05-factories-seeders-eloquent/)
+5. [Models no Laravel](unidade-1/05-orm-eloquent/)
 
 ## Projeto da disciplina
 
