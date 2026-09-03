@@ -594,6 +594,14 @@ $books = Book::with(['author', 'categories'])->get();
 
 O eager loading não deve carregar dados sem necessidade. A escolha depende das informações que serão usadas naquela operação.
 
+> **Exemplo prático:** a pasta [exemplos](exemplos/) contém um
+> [BookController](exemplos/BookController.php) com duas actions que executam
+> essas estratégias e informam o tempo gasto, além das
+> [rotas](exemplos/web.php) que podem ser acrescentadas ao arquivo
+> `routes/web.php`. Execute as duas rotas com o banco preenchido e compare os
+> resultados. O tempo pode variar entre execuções, mas a diferença tende a
+> ficar mais evidente quando aumenta a quantidade de livros.
+
 ## 9. Paginação em um Controller
 
 Carregar todos os registros de uma tabela grande consome memória e produz páginas difíceis de utilizar. A paginação divide o resultado em partes menores.
