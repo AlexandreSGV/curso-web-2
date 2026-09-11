@@ -6,6 +6,8 @@ Para demonstrar essas operações, precisamos de dados. Cadastrar dezenas de liv
 
 Esta apostila continua o sistema de biblioteca e utiliza Laravel 13. O [exemplo completo](exemplos/) popula os relacionamentos 1–1, 1–N e N–N estudados na apostila de [Models](../05-models/README.md).
 
+A pasta de exemplos também inclui as [cinco migrations](exemplos/database/migrations/) e os [quatro Models](exemplos/app/Models/) compatíveis com as Factories e o `LibrarySeeder`. Consulte o [guia de preparação](exemplos/README.md#preparando-o-projeto) para montar o exemplo ou integrá-lo a um projeto já iniciado.
+
 ## Índice
 
 1. [Por que popular o banco?](#1-por-que-popular-o-banco)
@@ -501,4 +503,3 @@ Boas práticas para este primeiro contato:
 - [Laravel 13 — Eloquent Factories](https://laravel.com/docs/13.x/eloquent-factories)
 - [Laravel 13 — Relacionamentos do Eloquent](https://laravel.com/docs/13.x/eloquent-relationships)
 - [FakerPHP — documentação](https://fakerphp.org/)
-
