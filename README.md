@@ -10,7 +10,8 @@ Materiais da disciplina de Desenvolvimento para Web II.
 4. [Migrations](unidade-1/04-migrations-models/)
 5. [Models no Laravel](unidade-1/05-models/)
 6. [ORM Eloquent](unidade-1/06-orm-eloquent/)
-7. [Controllers no Laravel](unidade-1/07-controllers/)
+7. [Seeders e Factories](unidade-1/07-seeders-factories/)
+8. [Controllers no Laravel](unidade-1/08-controllers/)
 
 ## Projeto da disciplina
 
