@@ -12,46 +12,49 @@ class LibrarySeeder extends Seeder
 {
     public function run(): void
     {
-        $categories = collect([
+        $categoryNames = [
             'Biografia',
             'Ciência',
             'Fantasia',
             'História',
             'Romance',
             'Tecnologia',
-        ])->map(
-            fn (string $name): Category =>
-                Category::firstOrCreate(['name' => $name])
-        );
+        ];
 
-        Author::factory()
-            ->count(8)
-            ->create()
-            ->each(function (Author $author) use ($categories): void {
-                Book::factory()
-                    ->count(5)
-                    ->for($author, 'author')
-                    ->has(BookDetail::factory(), 'detail')
-                    ->create()
-                    ->each(function (Book $book) use ($categories): void {
-                        $selectedCategories = $categories
-                            ->random(random_int(1, 3))
-                            ->values();
+        $categories = [];
 
-                        $pivotAttributes = $selectedCategories
-                            ->mapWithKeys(
-                                fn (Category $category, int $index): array => [
-                                    $category->id => [
-                                        'featured' => $index === 0,
-                                        'position' => $index + 1,
-                                    ],
-                                ]
-                            )
-                            ->all();
+        // Cria as categorias ou reaproveita as que já existem.
+        foreach ($categoryNames as $name) {
+            $categories[] = Category::firstOrCreate(['name' => $name]);
+        }
 
-                        $book->categories()->attach($pivotAttributes);
-                    });
-            });
+        $authors = Author::factory()->count(8)->create();
+
+        foreach ($authors as $author) {
+            $books = Book::factory()
+                ->count(5)
+                ->for($author, 'author')
+                ->has(BookDetail::factory(), 'detail')
+                ->create();
+
+            foreach ($books as $book) {
+                // Sorteia de 1 a 3 categorias, sem repetir no mesmo livro.
+                $quantity = random_int(1, 3);
+                shuffle($categories);
+                $selectedCategories = array_slice($categories, 0, $quantity);
+
+                $position = 1;
+
+                foreach ($selectedCategories as $category) {
+                    // Insere uma associação por vez na tabela book_category.
+                    $book->categories()->attach($category->id, [
+                        'featured' => $position === 1,
+                        'position' => $position,
+                    ]);
+
+                    $position++;
+                }
+            }
+        }
     }
 }
-

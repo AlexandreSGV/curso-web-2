@@ -8,6 +8,8 @@ Este exemplo complementa a [apostila de Seeders e Factories](../README.md). Ele 
 
 Com as tabelas da biblioteca inicialmente vazias, a primeira execução produz 8 autores, 40 livros, 40 detalhes, 6 categorias e entre 40 e 120 associações na pivot.
 
+O [LibrarySeeder](database/seeders/LibrarySeeder.php) utiliza arrays e laços `foreach`. Ele cria as categorias, percorre os autores e seus livros e chama `attach()` para cada categoria sorteada. `shuffle()` e `array_slice()` selecionam de 1 a 3 categorias sem repetição no mesmo livro; a primeira recebe `featured = true`, e `position` registra a ordem a partir de 1.
+
 ## Pré-requisitos
 
 Use um projeto Laravel 13 (PHP 8.3 ou superior), com a conexão de banco configurada no `.env` e as dependências instaladas por `composer install`, incluindo o Faker utilizado pelas Factories.
@@ -121,11 +123,17 @@ $book = App\Models\Book::with(['author', 'detail', 'categories'])->first();
 $book->author->name;
 $book->detail?->pages;
 
-$book->categories->map(fn ($category) => [
-    'name' => $category->name,
-    'featured' => (bool) $category->pivot->featured,
-    'position' => $category->pivot->position,
-]);
+$categoryData = [];
+
+foreach ($book->categories as $category) {
+    $categoryData[] = [
+        'name' => $category->name,
+        'featured' => (bool) $category->pivot->featured,
+        'position' => $category->pivot->position,
+    ];
+}
+
+$categoryData;
 
 App\Models\Author::withCount('books')->get(['id', 'name']);
 App\Models\Category::withCount('books')->get(['id', 'name']);
@@ -136,13 +144,15 @@ Após a população, o exemplo de lazy/eager loading da apostila de [Eloquent](.
 
 ## Se a pivot for simples
 
-Os arquivos fornecidos já estão alinhados à pivot completa. Se optar por manter no seu projeto a versão anterior com apenas as duas chaves, substitua o bloco de `LibrarySeeder` que monta `$pivotAttributes` e chama `attach()` por:
+Os arquivos fornecidos já estão alinhados à pivot completa. Se optar por manter no seu projeto a versão anterior com apenas as duas chaves, mantenha o `foreach ($selectedCategories as $category)` e substitua apenas a chamada a `attach()` por:
 
 ```php
-$book->categories()->attach($selectedCategories->pluck('id'));
+$book->categories()->attach($category->id);
 ```
 
 Nesse caso, remova também `withPivot()` e `withTimestamps()` dos relacionamentos. A migration, os Models e o Seeder devem representar a mesma versão.
+
+Na versão completa, se a associação falhar por coluna inexistente, confira as colunas da tabela real: `book_id`, `category_id`, `featured`, `position`, `created_at` e `updated_at`. Se faltar alguma, siga a preparação para projetos existentes e crie uma nova migration com a alteração necessária. Editar uma migration já executada não atualiza o banco.
 
 ## Nova execução
 

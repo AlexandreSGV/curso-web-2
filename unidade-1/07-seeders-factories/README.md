@@ -254,6 +254,8 @@ O [LibrarySeeder completo](exemplos/database/seeders/LibrarySeeder.php) cria:
 - 1 detalhe para cada livro;
 - entre 1 e 3 categorias para cada livro.
 
+O fluxo utiliza arrays, variáveis intermediárias e laços `foreach`. Cada laço percorre uma etapa: categorias, autores, livros e associações.
+
 ```php
 <?php
 
@@ -269,46 +271,50 @@ class LibrarySeeder extends Seeder
 {
     public function run(): void
     {
-        $categories = collect([
+        $categoryNames = [
             'Biografia',
             'Ciência',
             'Fantasia',
             'História',
             'Romance',
             'Tecnologia',
-        ])->map(
-            fn (string $name): Category =>
-                Category::firstOrCreate(['name' => $name])
-        );
+        ];
 
-        Author::factory()
-            ->count(8)
-            ->create()
-            ->each(function (Author $author) use ($categories): void {
-                Book::factory()
-                    ->count(5)
-                    ->for($author, 'author')
-                    ->has(BookDetail::factory(), 'detail')
-                    ->create()
-                    ->each(function (Book $book) use ($categories): void {
-                        $selectedCategories = $categories
-                            ->random(random_int(1, 3))
-                            ->values();
+        $categories = [];
 
-                        $pivotAttributes = $selectedCategories
-                            ->mapWithKeys(
-                                fn (Category $category, int $index): array => [
-                                    $category->id => [
-                                        'featured' => $index === 0,
-                                        'position' => $index + 1,
-                                    ],
-                                ]
-                            )
-                            ->all();
+        // Cria as categorias ou reaproveita as que já existem.
+        foreach ($categoryNames as $name) {
+            $categories[] = Category::firstOrCreate(['name' => $name]);
+        }
 
-                        $book->categories()->attach($pivotAttributes);
-                    });
-            });
+        $authors = Author::factory()->count(8)->create();
+
+        foreach ($authors as $author) {
+            $books = Book::factory()
+                ->count(5)
+                ->for($author, 'author')
+                ->has(BookDetail::factory(), 'detail')
+                ->create();
+
+            foreach ($books as $book) {
+                // Sorteia de 1 a 3 categorias, sem repetir no mesmo livro.
+                $quantity = random_int(1, 3);
+                shuffle($categories);
+                $selectedCategories = array_slice($categories, 0, $quantity);
+
+                $position = 1;
+
+                foreach ($selectedCategories as $category) {
+                    // Insere uma associação por vez na tabela book_category.
+                    $book->categories()->attach($category->id, [
+                        'featured' => $position === 1,
+                        'position' => $position,
+                    ]);
+
+                    $position++;
+                }
+            }
+        }
     }
 }
 ```
@@ -331,19 +337,26 @@ Para cada livro, o Laravel usa o método `detail()` e cria um `BookDetail` relac
 
 ### Relação N–N: livros e categorias
 
-```php
-$book->categories()->attach($pivotAttributes);
-```
+`$categories` é um array com as seis categorias já salvas no banco. Para cada livro, `random_int(1, 3)` define a quantidade, `shuffle()` embaralha o array e `array_slice()` seleciona as primeiras categorias. Assim, a mesma categoria não é sorteada duas vezes para o mesmo livro.
 
-`attach()` insere as associações em `book_category`. A chave do array é o ID da categoria; os demais valores preenchem `featured` e `position`. A primeira categoria sorteada fica em destaque. Como o relacionamento usa `withTimestamps()`, o Eloquent também preenche os timestamps da pivot.
-
-Se sua pivot for a versão simples, sem colunas extras e sem timestamps, substitua a montagem de `$pivotAttributes` por:
+Dentro do último `foreach`, associamos uma categoria por vez:
 
 ```php
-$book->categories()->attach($selectedCategories->pluck('id'));
+$book->categories()->attach($category->id, [
+    'featured' => $position === 1,
+    'position' => $position,
+]);
 ```
 
-Não misture o código da pivot completa com a migration da pivot simples.
+O primeiro argumento de `attach()` é o ID da categoria; o segundo contém os valores extras da associação. O ID do livro é obtido de `$book`. A variável `$position` começa em 1 para cada livro e aumenta após cada inserção: apenas a primeira categoria fica em destaque. Como o relacionamento usa `withTimestamps()`, o Eloquent também preenche os timestamps da pivot. [Laravel 13 — associações N–N](https://laravel.com/docs/13.x/eloquent-relationships#attaching-detaching).
+
+Se sua pivot for a versão simples, sem colunas extras e sem timestamps, mantenha o `foreach` e substitua apenas a chamada a `attach()` por:
+
+```php
+$book->categories()->attach($category->id);
+```
+
+Nesse caso, remova também `withPivot()` e `withTimestamps()` dos dois relacionamentos. A migration, os Models e o Seeder precisam representar a mesma versão da pivot.
 
 ## 8. Executando os Seeders
 
@@ -424,11 +437,17 @@ $book->detail?->pages;
 Confira os dados da pivot:
 
 ```php
-$book->categories->map(fn ($category) => [
-    'name' => $category->name,
-    'featured' => (bool) $category->pivot->featured,
-    'position' => $category->pivot->position,
-]);
+$categoryData = [];
+
+foreach ($book->categories as $category) {
+    $categoryData[] = [
+        'name' => $category->name,
+        'featured' => (bool) $category->pivot->featured,
+        'position' => $category->pivot->position,
+    ];
+}
+
+$categoryData;
 ```
 
 Veja quantos livros cada autor possui:
@@ -448,7 +467,7 @@ Com o banco populado, você também pode executar o [exemplo de lazy e eager loa
 | `Call to undefined method ...::factory()` | O Model não usa `HasFactory` | Adicione a trait ao Model correspondente |
 | Erro de tabela ou coluna inexistente | Migrations pendentes ou estrutura diferente | Execute `php artisan migrate:status` e compare os campos |
 | Erro de chave estrangeira | Registro pai não existe ou relação está configurada incorretamente | Crie os pais antes dos filhos e confira `for()` e `has()` |
-| Erro na pivot | Migration e `belongsToMany()` representam versões diferentes | Alinhe colunas extras e `withTimestamps()` |
+| Erro na pivot | Estrutura do banco e `belongsToMany()` podem representar versões diferentes | Confira `book_id`, `category_id`, `featured`, `position` e os timestamps na tabela real |
 | ISBN duplicado | Valor repetido em coluna única | Mantenha a constraint do banco e gere valores adequados |
 | Quantidades maiores que as previstas | O Seeder foi executado mais de uma vez | Lembre que a nova execução acrescenta registros |
 
@@ -463,6 +482,8 @@ Boas práticas para este primeiro contato:
 - trate as constraints do banco como a garantia final de integridade.
 
 `fake()->unique()` ajuda durante a geração atual, mas não substitui uma constraint `unique()` criada pela migration.
+
+Se o erro de associação mencionar uma coluna ausente, compare a tabela `book_category` com a [migration do exemplo](exemplos/database/migrations/2026_09_11_000005_create_book_category_table.php). Editar uma migration já executada não altera o banco: crie uma nova migration para adicionar os campos que faltam.
 
 ## 11. Quadro de consulta rápida
 
