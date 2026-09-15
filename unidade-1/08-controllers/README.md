@@ -376,6 +376,8 @@ Antes de copiar, confirme os Models, campos e relacionamentos das apostilas de [
 
 O formulário altera somente os quatro campos de `Book`. As categorias já associadas são exibidas e preservadas; sua manutenção não é parte deste exemplo.
 
+A próxima apostila, [Views e Blade](../09-views/), amplia a interface com layout compartilhado, CRUDs de autores e categorias e manutenção dos detalhes e das associações de cada livro.
+
 Se já adicionou as actions `index_lazy_loading` e `index_eager_loading`, mantenha-as ao integrar o Controller. Suas rotas específicas devem ficar **antes** de `Route::resource(...)` para não serem confundidas com `/books/{book}`.
 
 Na pasta do projeto, execute `php artisan serve` e acesse `/books`. Siga um cadastro até a página de detalhes; depois edite e exclua um livro de teste. Ao editar, experimente manter o mesmo ISBN e observe por que `ignore($book)` é necessário.
