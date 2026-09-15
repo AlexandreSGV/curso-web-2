@@ -12,6 +12,7 @@ Materiais da disciplina de Desenvolvimento para Web II.
 6. [ORM Eloquent](unidade-1/06-orm-eloquent/)
 7. [Seeders e Factories](unidade-1/07-seeders-factories/)
 8. [Controllers no Laravel](unidade-1/08-controllers/)
+9. [Views e Blade no Laravel](unidade-1/09-views/)
 
 ## Projeto da disciplina
 
