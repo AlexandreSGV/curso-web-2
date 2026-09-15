@@ -32,22 +32,9 @@ Utilize os [Models, migrations, Factories e Seeders da apostila 07](../../07-see
 
 Em um projeto novo, copie os arquivos da apostila 07 conforme seu guia. Em um projeto já iniciado, integre o que falta, preservando migrations já executadas e evitando duas migrations de criação da mesma tabela. O `projeto-biblioteca` da raiz ainda é uma etapa inicial e precisa dessa preparação.
 
-Confira a conexão no `.env`. Para este exemplo local, você pode usar sessões e cache em arquivos, sem depender de tabelas adicionais:
-
-```dotenv
-APP_LOCALE=pt_BR
-SESSION_DRIVER=file
-CACHE_STORE=file
-```
-
-A pasta `lang/pt_BR` fornecida no exemplo traduz as mensagens de validação utilizadas pelos Controllers. Integre esse arquivo se o projeto já tiver traduções.
-
-A sessão é usada pelo Laravel para o token CSRF, os erros de validação, `old()` e as mensagens após redirecionamentos. Os dados de livros e seus relacionamentos são gravados no banco.
-
-Na pasta do projeto:
+Mantenha as configurações padrão do Laravel. Na pasta do projeto, execute:
 
 ```bash
-php artisan config:clear
 php artisan migrate
 php artisan db:seed --class=LibrarySeeder
 ```
@@ -64,7 +51,6 @@ Se já populou o banco, não é necessário executar o Seeder novamente. Cada ex
 | [BookDetailController.php](app/Http/Controllers/BookDetailController.php) | `app/Http/Controllers/BookDetailController.php` |
 | [BookCategoryController.php](app/Http/Controllers/BookCategoryController.php) | `app/Http/Controllers/BookCategoryController.php` |
 | [resources/views](resources/views/) | `resources/views/`, preservando as subpastas |
-| [validation.php](lang/pt_BR/validation.php) | `lang/pt_BR/validation.php` |
 | [routes/web.php](routes/web.php) | Integrar as definições ao `routes/web.php` existente |
 
 O `Controller.php` base já faz parte do projeto Laravel. Não crie duas classes com o mesmo nome: esta versão de `BookController` amplia a da apostila 08. As Views de `books` também passam a usar o layout desta etapa. Se tiver outras personalizações nesses arquivos, integre-as antes de substituí-los.
