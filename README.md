@@ -13,6 +13,7 @@ Materiais da disciplina de Desenvolvimento para Web II.
 7. [Seeders e Factories](unidade-1/07-seeders-factories/)
 8. [Controllers no Laravel](unidade-1/08-controllers/)
 9. [Views e Blade no Laravel](unidade-1/09-views/)
+10. [Tutorial: CRUD de produtos no Laravel](unidade-1/10-tutorial-crud-produto/)
 
 ## Projeto da disciplina
 
