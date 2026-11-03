@@ -2,7 +2,7 @@
 
 O Laravel oferece serviços prontos para identificar usuários e verificar permissões. Nesta apostila, utilizaremos esses recursos para controlar o acesso à biblioteca: quem pode consultar, cadastrar, editar e excluir livros.
 
-O exemplo continua a biblioteca das aulas de [Models](../05-models/), [Seeders e Factories](../07-seeders-factories/), [Controllers](../08-controllers/) e [Views](../09-views/), com Laravel 13 e Blade. Os arquivos complementares estão em [exemplos](exemplos/).
+O exemplo continua a biblioteca das aulas de [Models](../05-models/), [Seeders e Factories](../07-seeders-factories/), [Controllers](../08-controllers/) e [Views](../09-views/), com Laravel 13 e Blade. A pasta [exemplos](exemplos/) reúne os arquivos criados ou editados para a aplicação, incluindo os das aulas anteriores, para copiar em um projeto Laravel novo.
 
 ## Índice
 
@@ -326,7 +326,7 @@ Route::middleware('auth')->group(function () {
 });
 ```
 
-Esse trecho mostra algumas rotas. O [web.php completo](exemplos/routes/web.php) contém todas as operações e substitui as definições equivalentes da aula 09; não duplique as rotas resource.
+Esse trecho mostra algumas rotas. O [web.php do exemplo](exemplos/routes/web.php) contém todas as operações protegidas e substitui as definições equivalentes da aula 09; não duplique as rotas resource.
 
 - `guest` destina o login a visitantes.
 - `throttle:5,1` limita o envio do login a cinco requisições por minuto por IP neste exemplo.
@@ -407,16 +407,17 @@ O menu administrativo utiliza `@can('manage-catalog')`. Os detalhes e vínculos 
 
 ## 9. Executando e conferindo o exemplo
 
-Siga o [guia de integração](exemplos/README.md) sobre a biblioteca da aula 09. O complemento inclui migration de papel, Seeder de usuários, login, Policy, Controller, rotas e Views adaptadas.
+Siga o [guia de preparação](exemplos/README.md): crie um projeto Laravel 13 novo e copie para ele as pastas `app`, `database`, `resources` e `routes` do exemplo. Elas reúnem os Models, migrations, Factories, Seeders, Controllers e Views desenvolvidos nas aulas; a estrutura padrão fica a cargo do Laravel.
 
-Depois de integrar os arquivos:
+Depois da cópia, na raiz do novo projeto:
 
 ```bash
-php artisan migrate
-php artisan db:seed --class=AccessSeeder
+php artisan migrate --seed
 php artisan route:list
 php artisan serve
 ```
+
+O `DatabaseSeeder` prepara os dados da biblioteca e as contas de aula. Nas próximas execuções, basta iniciar o servidor; repetir o Seeder da biblioteca acrescenta novos dados.
 
 Acesse `/login`. As contas de demonstração são `admin@example.com`, `bibliotecario@example.com` e `cliente@example.com`, com a senha local **`senha-aula-123`**.
 

@@ -9,7 +9,7 @@ use App\Http\Controllers\CategoryController;
 use App\Models\Book;
 use Illuminate\Support\Facades\Route;
 
-// Integre estas definições ao web.php existente, sem duplicar as rotas da aula 09.
+// Rotas da biblioteca com autenticação e autorização.
 Route::redirect('/', '/books');
 
 Route::middleware('guest')->group(function () {
