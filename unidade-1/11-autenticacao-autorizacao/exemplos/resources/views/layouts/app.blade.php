@@ -18,6 +18,9 @@
                         <a href="{{ route('authors.index') }}" class="underline">Autores</a>
                         <a href="{{ route('categories.index') }}" class="underline">Categorias</a>
                     @endcan
+                    @can('viewAny', \App\Models\User::class)
+                        <a href="{{ route('users.index') }}" class="underline">Usuários</a>
+                    @endcan
                     <span>{{ auth()->user()->name }} — {{ auth()->user()->role }}</span>
                     @if (auth()->user()->role === 'bibliotecario')
                         <span>Área de trabalho do bibliotecário</span>

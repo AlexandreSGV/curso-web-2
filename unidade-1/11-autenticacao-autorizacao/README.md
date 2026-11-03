@@ -153,6 +153,7 @@ Neste exemplo, cada usuário possui um papel, armazenado na coluna `role` de `us
 | Manter detalhes (1–1) e associações com categorias (N–N) | Não | Sim | Sim |
 | Excluir livros | Não | Não | Sim |
 | Acessar os CRUDs de autores e categorias | Não | Não | Sim |
+| Listar, consultar e editar usuários | Não | Não | Sim |
 
 Um papel agrupa responsabilidades. Uma permissão corresponde a uma ação, como `update` ou `delete`. A Policy traduz o papel em permissões.
 
@@ -405,6 +406,16 @@ O menu administrativo utiliza `@can('manage-catalog')`. Os detalhes e vínculos 
 
 **Ocultar o botão adapta a interface, mas não impede uma requisição enviada diretamente. A proteção precisa existir no servidor.** O Blade consulta as permissões no servidor ao montar o HTML; o navegador recebe o resultado.
 
+### Administração de usuários
+
+As Views [index](exemplos/resources/views/users/index.blade.php), [show](exemplos/resources/views/users/show.blade.php) e [edit](exemplos/resources/views/users/edit.blade.php) permitem ao administrador listar contas, consultar seus dados e editar nome, e-mail e papel.
+
+A [UserPolicy](exemplos/app/Policies/UserPolicy.php) permite `viewAny`, `view` e `update` somente quando o usuário autenticado tem `role === 'admin'`. O [UserController](exemplos/app/Http/Controllers/UserController.php) consulta essa Policy antes das quatro actions: `index`, `show`, `edit` e `update`. As rotas também usam `auth` e `can`.
+
+O menu usa `@can('viewAny', \App\Models\User::class)` para mostrar **Usuários**. O Controller valida os campos e atribui o papel explicitamente, mantendo `role` fora do `Fillable` do Model padrão. Senhas não são apresentadas nem alteradas nessas telas.
+
+Se um administrador mudar o próprio papel, a aplicação o encaminha à biblioteca, e os próximos acessos seguem as novas permissões.
+
 ## 9. Executando e conferindo o exemplo
 
 Siga o [guia de preparação](exemplos/README.md): crie um projeto Laravel 13 novo e copie para ele as pastas `app`, `database`, `resources` e `routes` do exemplo. Elas reúnem os Models, migrations, Factories, Seeders, Controllers e Views desenvolvidos nas aulas; a estrutura padrão fica a cargo do Laravel.
@@ -425,8 +436,9 @@ Acesse `/login`. As contas de demonstração são `admin@example.com`, `bibliote
 2. Entre como cliente: consulte um livro e confira os relacionamentos; os controles de alteração não devem aparecer.
 3. Ainda como cliente, digite `/books/create` na barra de endereços: deve receber 403.
 4. Saia e entre como bibliotecário: cadastre e edite um livro, seus detalhes e suas categorias. A exclusão do livro deve permanecer indisponível.
-5. Entre como administrador: confira a exclusão e os CRUDs de autores e categorias.
-6. Clique em **Sair** e tente abrir `/books` novamente: o login deve ser exigido.
+5. Entre como administrador: confira a exclusão, os CRUDs de autores/categorias e o menu **Usuários**. Liste as contas, consulte uma delas e edite seus dados.
+6. Como cliente ou bibliotecário, tente abrir `/users` e `/users/1/edit` diretamente: deve receber 403. Use um ID existente.
+7. Clique em **Sair** e tente abrir `/books` novamente: o login deve ser exigido.
 
 ## O que você precisa guardar
 

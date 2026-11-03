@@ -6,7 +6,9 @@ use App\Http\Controllers\BookCategoryController;
 use App\Http\Controllers\BookController;
 use App\Http\Controllers\BookDetailController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\UserController;
 use App\Models\Book;
+use App\Models\User;
 use Illuminate\Support\Facades\Route;
 
 // Rotas da biblioteca com autenticação e autorização.
@@ -21,6 +23,16 @@ Route::middleware('guest')->group(function () {
 
 Route::middleware('auth')->group(function () {
     Route::post('/logout', [AuthController::class, 'destroy'])->name('logout');
+
+    // Somente administradores podem consultar e editar usuários.
+    Route::get('/users', [UserController::class, 'index'])
+        ->can('viewAny', User::class)->name('users.index');
+    Route::get('/users/{user}', [UserController::class, 'show'])
+        ->can('view', 'user')->name('users.show');
+    Route::get('/users/{user}/edit', [UserController::class, 'edit'])
+        ->can('update', 'user')->name('users.edit');
+    Route::match(['put', 'patch'], '/users/{user}', [UserController::class, 'update'])
+        ->can('update', 'user')->name('users.update');
 
     // Administração de autores/categorias e demonstrações de desempenho.
     // As rotas de medição vêm antes da rota /books/{book}.

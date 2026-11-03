@@ -99,6 +99,7 @@ O envio do login tem limite de cinco requisições por minuto por IP. Se receber
 | Associar, editar e remover vínculos com categorias | Não | Sim | Sim |
 | Excluir livros | Não | Não | Sim |
 | Acessar os CRUDs de autores e categorias | Não | Não | Sim |
+| Listar, consultar e editar usuários | Não | Não | Sim |
 | Executar as duas rotas de medição de loading | Não | Não | Sim |
 
 O bibliotecário escolhe autores e categorias já cadastrados. O administrador pode cadastrar novos autores e categorias. Seus nomes aparecem para todos os papéis na página do livro; os links administrativos aparecem apenas para o administrador.
@@ -108,8 +109,9 @@ O bibliotecário escolhe autores e categorias já cadastrados. O administrador p
 | Pasta ou arquivo | Conteúdo |
 |---|---|
 | [app/Models](app/Models/) | `Author`, `Book`, `BookDetail` e `Category` |
-| [app/Http/Controllers](app/Http/Controllers/) | Login/logout e os cinco Controllers da biblioteca |
+| [app/Http/Controllers](app/Http/Controllers/) | Login/logout, usuários e os cinco Controllers da biblioteca |
 | [app/Policies/BookPolicy.php](app/Policies/BookPolicy.php) | Permissões das operações com livros |
+| [app/Policies/UserPolicy.php](app/Policies/UserPolicy.php) | Consulta e edição de usuários somente por administradores |
 | [app/Providers/AppServiceProvider.php](app/Providers/AppServiceProvider.php) | Provider editado para definir o Gate `manage-catalog` |
 | [database/migrations](database/migrations/) | Cinco migrations da biblioteca e uma para acrescentar `users.role` |
 | [database/factories](database/factories/) | Geração de autores, livros, detalhes e categorias |
@@ -121,14 +123,30 @@ Os Models, Factories, migrations e o `LibrarySeeder` preservam o contexto da aul
 
 Todas as rotas internas da biblioteca exigem `auth`. Os CRUDs de autores/categorias e as medições exigem `manage-catalog`. As alterações em detalhes e vínculos consultam `update` do livro. Os formulários mantêm `@csrf` e os métodos HTTP das aulas anteriores.
 
+### Telas de usuários
+
+O administrador acessa **Usuários** no menu. A listagem é paginada; **Detalhes** abre a conta e **Editar** permite alterar nome, e-mail e papel. O e-mail deve ser único, e o papel deve ser `admin`, `bibliotecario` ou `cliente`. A senha permanece inalterada.
+
+| Operação | Rota |
+|---|---|
+| Listar contas | `GET /users` |
+| Consultar uma conta | `GET /users/{user}` |
+| Abrir a edição | `GET /users/{user}/edit` |
+| Salvar a edição | `PUT/PATCH /users/{user}` |
+
+Todas essas rotas exigem login e autorização pela `UserPolicy`, também consultada pelo Controller. O Model `User` continua sendo o padrão do Laravel; não é necessário acrescentar `role` a `Fillable`, pois a atribuição é explícita na action administrativa.
+
+Uma alteração de papel passa a valer nos próximos acessos. Se o administrador mudar o próprio papel, será encaminhado à lista de livros.
+
 ## 7. Conferir em sala
 
 1. Sem login, abra `/books`: deve ser redirecionado para `/login`.
 2. Tente uma senha incorreta: confira a mensagem e a preservação somente do e-mail.
 3. Como cliente, consulte livros e relacionamentos. Digite `/books/create` e `/authors` diretamente: deve receber 403.
 4. Como bibliotecário, cadastre/edite um livro e mantenha seus detalhes e vínculos. Excluir o livro e gerenciar autores/categorias continuam proibidos.
-5. Como administrador, confira todas as operações com registros de teste.
-6. Após sair, abra uma página interna: o login deve ser exigido novamente.
+5. Como administrador, confira as operações da biblioteca e o menu **Usuários**: abra a listagem, os detalhes e a edição de uma conta. Salve mantendo o e-mail atual e depois teste um e-mail já usado por outra conta.
+6. Como cliente ou bibliotecário, tente abrir `/users`, `/users/1` e `/users/1/edit` diretamente, usando um ID existente: deve receber 403. O envio da atualização também é bloqueado.
+7. Após sair, abra uma página interna: o login deve ser exigido novamente.
 
 ## Reutilizar o banco nas próximas execuções
 
