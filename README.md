@@ -15,6 +15,7 @@ Materiais da disciplina de Desenvolvimento para Web II.
 9. [Views e Blade no Laravel](unidade-1/09-views/)
 10. [Tutorial: CRUD de produtos no Laravel](unidade-1/10-tutorial-crud-produto/)
 11. [Autenticação e autorização no Laravel](unidade-1/11-autenticacao-autorizacao/)
+12. [Relacionamento N–N: matrículas de alunos em turmas](unidade-1/12-relacionamento-n-n/)
 
 ## Projeto da disciplina
 
