@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 240" role="img" aria-label="Capa padrão de livro">
+    <rect width="160" height="240" rx="10" fill="#e2e8f0"/>
+    <path d="M80 145c-15-11-30-14-49-11V80c19-3 34 0 49 11 15-11 30-14 49-11v54c-19-3-34 0-49 11Zm0 0V92"
+        fill="none" stroke="#475569" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+    <text x="80" y="176" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#475569">SEM CAPA</text>
+</svg>

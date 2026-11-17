@@ -1,0 +1,198 @@
+openapi: 3.0.3
+info:
+  title: API da biblioteca
+  version: 1.0.0
+  description: Contrato de aula para um CRUD de livros e autenticação com token.
+servers:
+  - url: http://127.0.0.1:8000/api
+security:
+  - bearerAuth: []
+paths:
+  /tokens:
+    post:
+      summary: Emitir um token
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, password]
+              properties:
+                email: { type: string, format: email }
+                password: { type: string, format: password }
+      responses:
+        '201':
+          description: Token emitido com validade de duas horas
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [token, user]
+                properties:
+                  token: { type: string }
+                  user:
+                    type: object
+                    required: [name, role]
+                    properties:
+                      name: { type: string }
+                      role: { type: string, enum: [admin, bibliotecario, cliente] }
+        '422': { $ref: '#/components/responses/Invalid' }
+        '429': { description: Limite de tentativas atingido }
+  /tokens/current:
+    delete:
+      summary: Revogar o token usado nesta requisição
+      responses:
+        '204': { description: Token revogado }
+        '401': { $ref: '#/components/responses/Unauthenticated' }
+  /authors:
+    get:
+      summary: Listar autores para os formulários
+      responses:
+        '200':
+          description: Autores disponíveis
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [data]
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      required: [id, name]
+                      properties:
+                        id: { type: integer }
+                        name: { type: string }
+        '401': { $ref: '#/components/responses/Unauthenticated' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+  /books:
+    get:
+      summary: Listar livros
+      responses:
+        '200':
+          description: Livros ordenados por título
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [data]
+                properties:
+                  data:
+                    type: array
+                    items: { $ref: '#/components/schemas/Book' }
+        '401': { $ref: '#/components/responses/Unauthenticated' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+    post:
+      summary: Cadastrar livro (admin ou bibliotecário)
+      requestBody: { $ref: '#/components/requestBodies/BookInput' }
+      responses:
+        '201':
+          description: Livro criado
+          headers:
+            Location:
+              description: URL para consultar o livro criado
+              schema: { type: string, format: uri }
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/BookResponse' }
+        '401': { $ref: '#/components/responses/Unauthenticated' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '422': { $ref: '#/components/responses/Invalid' }
+  /books/{book}:
+    parameters:
+      - name: book
+        in: path
+        required: true
+        description: ID do livro
+        schema: { type: integer }
+    get:
+      summary: Consultar um livro
+      responses:
+        '200': { $ref: '#/components/responses/Book' }
+        '401': { $ref: '#/components/responses/Unauthenticated' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+    put:
+      summary: Atualizar os campos do livro (admin ou bibliotecário)
+      requestBody: { $ref: '#/components/requestBodies/BookInput' }
+      responses:
+        '200': { $ref: '#/components/responses/Book' }
+        '401': { $ref: '#/components/responses/Unauthenticated' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '422': { $ref: '#/components/responses/Invalid' }
+    delete:
+      summary: Excluir o livro e a capa, se houver (admin)
+      responses:
+        '204': { description: Livro excluído }
+        '401': { $ref: '#/components/responses/Unauthenticated' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+  requestBodies:
+    BookInput:
+      required: true
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/BookInput' }
+          example:
+            title: O cortiço
+            isbn: '9788535914849'
+            published_year: 1890
+            author_id: 1
+  responses:
+    Book:
+      description: Dados do livro
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/BookResponse' }
+    Unauthenticated:
+      description: Token ausente, inválido, revogado ou expirado
+    Forbidden:
+      description: A conta autenticada não tem permissão
+    NotFound:
+      description: Livro não encontrado
+    Invalid:
+      description: Dados inválidos ou credenciais incorretas
+      content:
+        application/json:
+          schema:
+            type: object
+            required: [message, errors]
+            properties:
+              message: { type: string }
+              errors:
+                type: object
+                additionalProperties:
+                  type: array
+                  items: { type: string }
+  schemas:
+    BookInput:
+      type: object
+      required: [title, isbn, published_year, author_id]
+      properties:
+        title: { type: string, maxLength: 255 }
+        isbn: { type: string, pattern: '^[0-9]{13}$' }
+        published_year: { type: integer, nullable: true, minimum: 1000, maximum: 2100 }
+        author_id: { type: integer }
+    Book:
+      allOf:
+        - $ref: '#/components/schemas/BookInput'
+        - type: object
+          required: [id, author_name, cover_url]
+          properties:
+            id: { type: integer }
+            author_name: { type: string }
+            cover_url: { type: string, format: uri }
+    BookResponse:
+      type: object
+      required: [data]
+      properties:
+        data: { $ref: '#/components/schemas/Book' }

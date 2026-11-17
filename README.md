@@ -16,6 +16,7 @@ Materiais da disciplina de Desenvolvimento para Web II.
 10. [Tutorial: CRUD de produtos no Laravel](unidade-1/10-tutorial-crud-produto/)
 11. [Autenticação e autorização no Laravel](unidade-1/11-autenticacao-autorizacao/)
 12. [Storage no Laravel: capas de livros](unidade-1/12-storage/)
+13. [APIs na Web: REST e Laravel](unidade-1/13-apis/)
 
 ## Projeto da disciplina
 
