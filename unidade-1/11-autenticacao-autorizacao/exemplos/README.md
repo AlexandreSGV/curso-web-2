@@ -96,7 +96,7 @@ O envio do login tem limite de cinco requisições por minuto por IP. Se receber
 | Listar e consultar livros, com autor, detalhes e categorias | Sim | Sim | Sim |
 | Cadastrar e editar livros | Não | Sim | Sim |
 | Criar, editar e remover detalhes de um livro | Não | Sim | Sim |
-| Associar, editar e remover vínculos com categorias | Não | Sim | Sim |
+| Associar e desassociar categorias de um livro | Não | Sim | Sim |
 | Excluir livros | Não | Não | Sim |
 | Acessar os CRUDs de autores e categorias | Não | Não | Sim |
 | Listar, consultar e editar usuários | Não | Não | Sim |
@@ -143,7 +143,7 @@ Uma alteração de papel passa a valer nos próximos acessos. Se o administrador
 1. Sem login, abra `/books`: deve ser redirecionado para `/login`.
 2. Tente uma senha incorreta: confira a mensagem e a preservação somente do e-mail.
 3. Como cliente, consulte livros e relacionamentos. Digite `/books/create` e `/authors` diretamente: deve receber 403.
-4. Como bibliotecário, cadastre/edite um livro e mantenha seus detalhes e vínculos. Excluir o livro e gerenciar autores/categorias continuam proibidos.
+4. Como bibliotecário, cadastre ou edite um livro e seus detalhes. Associe e desassocie uma categoria na página do livro. Excluir o livro e gerenciar autores/categorias continuam proibidos.
 5. Como administrador, confira as operações da biblioteca e o menu **Usuários**: abra a listagem, os detalhes e a edição de uma conta. Salve mantendo o e-mail atual e depois teste um e-mail já usado por outra conta.
 6. Como cliente ou bibliotecário, tente abrir `/users`, `/users/1` e `/users/1/edit` diretamente, usando um ID existente: deve receber 403. O envio da atualização também é bloqueado.
 7. Após sair, abra uma página interna: o login deve ser exigido novamente.
@@ -151,6 +151,8 @@ Uma alteração de papel passa a valer nos próximos acessos. Se o administrador
 ## Reutilizar o banco nas próximas execuções
 
 Depois da preparação inicial, basta iniciar o servidor novamente. Se forem acrescentadas migrations, execute `php artisan migrate`.
+
+A migration de `book_category` deste exemplo cria apenas as chaves do livro e da categoria e os timestamps. Se já executou uma versão anterior dessa migration, o Laravel não altera a tabela ao editar o arquivo. Para reproduzir a estrutura atual, siga a preparação com um banco de estudo novo.
 
 O `LibrarySeeder` acrescenta um novo conjunto de autores, livros e detalhes a cada execução. Por isso, não repita `db:seed` ou `migrate --seed` apenas para iniciar a aplicação.
 

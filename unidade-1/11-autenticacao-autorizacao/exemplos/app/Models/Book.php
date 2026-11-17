@@ -28,7 +28,6 @@ class Book extends Model
     public function categories(): BelongsToMany
     {
         return $this->belongsToMany(Category::class)
-            ->withPivot('featured', 'position')
             ->withTimestamps();
     }
 

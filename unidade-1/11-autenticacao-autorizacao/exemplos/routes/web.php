@@ -69,8 +69,6 @@ Route::middleware('auth')->group(function () {
 
         Route::get('/books/{book}/categories/create', [BookCategoryController::class, 'create'])->name('books.categories.create');
         Route::post('/books/{book}/categories', [BookCategoryController::class, 'store'])->name('books.categories.store');
-        Route::get('/books/{book}/categories/{category}/edit', [BookCategoryController::class, 'edit'])->name('books.categories.edit');
-        Route::put('/books/{book}/categories/{category}', [BookCategoryController::class, 'update'])->name('books.categories.update');
         Route::delete('/books/{book}/categories/{category}', [BookCategoryController::class, 'destroy'])->name('books.categories.destroy');
     });
 });

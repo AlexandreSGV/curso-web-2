@@ -359,7 +359,7 @@ Route::middleware(['auth', 'can:manage-catalog'])->group(function () {
 
 Esse trecho pressupõe os imports dos dois Controllers. No arquivo completo, o grupo administrativo já está dentro do grupo `auth`.
 
-As rotas que alteram `BookDetail` e a pivot `book_category` exigem `can:update,book`. Dessa forma, a permissão de editar um livro também controla seus detalhes e associações, preservando as relações 1–1, 1–N e N–N estudadas anteriormente.
+As rotas que alteram `BookDetail`, associam uma categoria ao livro ou desfazem essa associação exigem `can:update,book`. Neste exemplo, a pivot `book_category` guarda as chaves do livro e da categoria e os timestamps. A permissão de editar um livro também controla seus detalhes e associações.
 
 ## 8. Adaptando a interface com Blade
 
@@ -435,7 +435,7 @@ Acesse `/login`. As contas de demonstração são `admin@example.com`, `bibliote
 1. Sem login, tente abrir `/books`: a aplicação deve mostrar o login.
 2. Entre como cliente: consulte um livro e confira os relacionamentos; os controles de alteração não devem aparecer.
 3. Ainda como cliente, digite `/books/create` na barra de endereços: deve receber 403.
-4. Saia e entre como bibliotecário: cadastre e edite um livro, seus detalhes e suas categorias. A exclusão do livro deve permanecer indisponível.
+4. Saia e entre como bibliotecário: cadastre e edite um livro e seus detalhes. Associe e desassocie uma categoria pela página do livro. A exclusão do livro deve permanecer indisponível.
 5. Entre como administrador: confira a exclusão, os CRUDs de autores/categorias e o menu **Usuários**. Liste as contas, consulte uma delas e edite seus dados.
 6. Como cliente ou bibliotecário, tente abrir `/users` e `/users/1/edit` diretamente: deve receber 403. Use um ID existente.
 7. Clique em **Sair** e tente abrir `/books` novamente: o login deve ser exigido.
