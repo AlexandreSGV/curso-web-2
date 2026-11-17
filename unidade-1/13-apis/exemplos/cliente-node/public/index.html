@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Biblioteca | Cliente da API</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="stylesheet" href="/style.css">
+    <script src="/app.js" defer></script>
+</head>
+<body class="bg-slate-100 text-slate-900">
+    <main class="mx-auto max-w-3xl space-y-5 p-5">
+        <h1 class="text-2xl font-bold">Biblioteca | Cliente da API</h1>
+        <p id="message" role="status"></p>
+
+        <form id="login" class="panel max-w-sm">
+            <h2 class="text-lg font-semibold">Entrar</h2>
+            <label>E-mail <input name="email" type="email" required autocomplete="username"></label>
+            <label>Senha <input name="password" type="password" required autocomplete="current-password"></label>
+            <button>Entrar</button>
+        </form>
+
+        <section id="library" class="space-y-4" hidden>
+            <div class="panel">
+                <p id="account"></p>
+                <div class="flex flex-wrap gap-2">
+                    <button id="new-book" type="button" hidden>Cadastrar livro</button>
+                    <button id="logout" type="button">Sair</button>
+                </div>
+            </div>
+
+            <form id="book-form" class="panel" hidden>
+                <h2 id="form-title" class="text-lg font-semibold"></h2>
+                <label>Título <input name="title" maxlength="255" required></label>
+                <label>ISBN <input name="isbn" inputmode="numeric" pattern="[0-9]{13}" maxlength="13" required></label>
+                <label>Ano <input name="published_year" type="number" min="1000" max="2100"></label>
+                <label>Autor <select name="author_id" required></select></label>
+                <div class="flex flex-wrap gap-2">
+                    <button>Salvar</button>
+                    <button id="cancel" type="button">Cancelar</button>
+                </div>
+            </form>
+
+            <section id="details" class="panel" hidden></section>
+
+            <section class="panel">
+                <h2 class="text-lg font-semibold">Livros</h2>
+                <ul id="books" class="divide-y divide-slate-200"></ul>
+            </section>
+        </section>
+    </main>
+</body>
+</html>

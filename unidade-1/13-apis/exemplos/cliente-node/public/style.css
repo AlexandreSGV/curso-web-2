@@ -1,0 +1,29 @@
+[hidden] { display: none !important; }
+
+.panel {
+    background: white;
+    border: 1px solid #cbd5e1;
+    border-radius: .5rem;
+    padding: 1rem;
+}
+
+.panel > * + * { margin-top: .75rem; }
+
+label, label input, label select { display: block; }
+label input, label select {
+    width: 100%;
+    border: 1px solid #94a3b8;
+    border-radius: .25rem;
+    padding: .35rem .5rem;
+}
+
+button {
+    background: #1e40af;
+    color: white;
+    border-radius: .25rem;
+    cursor: pointer;
+    padding: .35rem .65rem;
+}
+
+#message:empty { display: none; }
+#message[data-error="true"] { color: #991b1b; }
