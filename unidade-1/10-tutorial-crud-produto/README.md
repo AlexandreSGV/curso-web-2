@@ -18,26 +18,11 @@ O exercício reúne os assuntos das aulas anteriores em um exemplo minimalista. 
 
 ## 1. Criar e executar o projeto
 
-### Preparar o ambiente
-
-Use o [ambiente de desenvolvimento da disciplina](../../apoio/ambiente-web2-wsl/), com PHP 8.3 ou superior, Composer, Node.js/npm, MySQL e VS Code. O PHP precisa ter a extensão `pdo_mysql` habilitada, e o serviço MySQL deve estar em execução.
-
-Se o instalador do Laravel ainda não estiver instalado, execute:
-
-```bash
-composer global require laravel/installer
-```
-
-No terminal, crie uma pasta de trabalho e entre nela. Você pode substituir `alexandresgv` pelo seu nome:
+No terminal, crie uma pasta com seu nome, entre nela e crie o projeto `armazem`. Use `alexandresgv` como exemplo de nome da pasta:
 
 ```bash
 mkdir alexandresgv
 cd alexandresgv
-```
-
-Crie o projeto:
-
-```bash
 laravel new armazem
 ```
 
@@ -63,19 +48,6 @@ A partir daqui, execute os comandos do Laravel na pasta `armazem`, onde está o 
 
 Este roteiro considera o MySQL local na porta **3308**, com usuário e senha `root`. Ajuste esses dados se o seu ambiente utilizar outros valores.
 
-Conecte-se pelo terminal:
-
-```bash
-mysql -h 127.0.0.1 -P 3308 -u root -p
-```
-
-Quando a senha for solicitada, digite `root`. No prompt do MySQL, crie o banco e saia:
-
-```sql
-CREATE DATABASE IF NOT EXISTS armazem;
-EXIT;
-```
-
 Abra o arquivo `.env`, na raiz do projeto, e configure apenas os dados da conexão:
 
 ```dotenv
@@ -93,18 +65,9 @@ Mantenha as demais configurações padrão do Laravel. Salve o arquivo e execute
 php artisan migrate
 ```
 
-Esse comando cria as tabelas das migrations iniciais do Laravel. A tabela de produtos será criada na próxima etapa.
+Se o banco `armazem` ainda não existir, confirme a criação quando o Laravel perguntar. Em seguida, o comando cria as tabelas das migrations iniciais. A tabela de produtos será criada na próxima etapa.
 
 ### Iniciar a aplicação
-
-Instale e prepare as dependências da parte visual:
-
-```bash
-npm install
-npm run build
-```
-
-Se o instalador já executou esses dois comandos com sucesso, não é necessário repeti-los.
 
 Inicie o ambiente de desenvolvimento:
 
@@ -173,23 +136,22 @@ php artisan migrate
 
 A migration descreve a estrutura; o comando aplica essa estrutura no banco.
 
-Para conferir o resultado, conecte-se novamente ao MySQL:
+Para conferir o resultado, abra outro terminal e conecte-se ao MySQL:
 
 ```bash
-mysql -h 127.0.0.1 -P 3308 -u root -p
+mysql -u root -p
 ```
 
-No prompt do MySQL, execute:
+Digite a senha `root` quando solicitada. Use a mesma instância do MySQL configurada no `.env` do projeto. No prompt do MySQL, execute:
 
 ```sql
 SHOW DATABASES;
 USE armazem;
 SHOW TABLES;
 DESC products;
-EXIT;
 ```
 
-Confira se `products` aparece e se as colunas correspondem à migration. `EXIT` retorna ao terminal para continuar o tutorial.
+Confira se `products` aparece e se as colunas correspondem à migration. Mantenha essa sessão do MySQL aberta para a etapa 5 e volte ao terminal da pasta `armazem` para continuar.
 
 ## 3. Criar o Model Product
 
@@ -329,13 +291,7 @@ Por enquanto, após salvar, a aplicação mostra o formulário novamente. Na eta
 
 ### Conferir o cadastro no banco
 
-No segundo terminal, conecte-se ao MySQL:
-
-```bash
-mysql -h 127.0.0.1 -P 3308 -u root -p
-```
-
-Execute:
+Na sessão do MySQL que você abriu na etapa 2, execute:
 
 ```sql
 USE armazem;
@@ -535,15 +491,6 @@ Percorra as quatro operações do CRUD:
 | Excluir | Volte à lista, clique em **Excluir** e confira a remoção |
 
 O projeto agora reúne migration, Model, Controller, rotas e quatro Views. Os métodos do Controller coordenam as operações; o Eloquent manipula os registros; o Blade apresenta os dados e os formulários.
-
-## Correções pontuais em relação ao roteiro original
-
-- Corrigido o caminho do Model para `app/Models/Product.php` e explicitados os imports necessários.
-- Incluída a criação do banco `armazem` antes das migrations.
-- Ajustados os comandos do cliente MySQL para usar o mesmo host e a porta `3308` da conexão do Laravel; os comandos SQL foram separados dos comandos do terminal.
-- Incluída a orientação para adiar as migrations do instalador até configurar a conexão.
-- Incluídos os comandos `npm install` e `npm run build`, os geradores das quatro Views e a conferência de rotas.
-- Corrigida a representação do parâmetro das rotas para `{product}`, compatível com `Product $product`.
 
 ## Referências
 
