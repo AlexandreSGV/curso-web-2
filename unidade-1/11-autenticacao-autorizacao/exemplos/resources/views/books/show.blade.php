@@ -55,8 +55,6 @@
                 <thead class="bg-slate-100">
                     <tr>
                         <th scope="col" class="p-3">Categoria</th>
-                        <th scope="col" class="p-3">Destaque</th>
-                        <th scope="col" class="p-3">Posição</th>
                         <th scope="col" class="p-3">Associação</th>
                     </tr>
                 </thead>
@@ -70,11 +68,8 @@
                                     {{ $category->name }}
                                 @endcan
                             </td>
-                            <td class="p-3">{{ $category->pivot->featured ? 'Sim' : 'Não' }}</td>
-                            <td class="p-3">{{ $category->pivot->position ?? 'Não informada' }}</td>
                             <td class="space-y-2 p-3">
                                 @can('update', $book)
-                                    <a href="{{ route('books.categories.edit', [$book, $category]) }}" class="text-blue-700 underline">Editar vínculo</a>
                                     <form method="POST" action="{{ route('books.categories.destroy', [$book, $category]) }}">
                                         @csrf
                                         @method('DELETE')
@@ -86,7 +81,7 @@
                             </td>
                         </tr>
                     @empty
-                        <tr><td colspan="4" class="p-3">Nenhuma categoria associada.</td></tr>
+                        <tr><td colspan="2" class="p-3">Nenhuma categoria associada.</td></tr>
                     @endforelse
                 </tbody>
             </table>

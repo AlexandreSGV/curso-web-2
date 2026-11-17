@@ -43,16 +43,8 @@ class LibrarySeeder extends Seeder
                 shuffle($categories);
                 $selectedCategories = array_slice($categories, 0, $quantity);
 
-                $position = 1;
-
                 foreach ($selectedCategories as $category) {
-                    // Insere uma associação por vez na tabela book_category.
-                    $book->categories()->attach($category->id, [
-                        'featured' => $position === 1,
-                        'position' => $position,
-                    ]);
-
-                    $position++;
+                    $book->categories()->attach($category->id);
                 }
             }
         }

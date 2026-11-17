@@ -13,8 +13,6 @@
                 <li class="space-y-1 py-3">
                     <a href="{{ route('books.show', $book) }}" class="text-blue-700 underline">{{ $book->title }}</a>
                     <p>Autor: {{ $book->author?->name ?? 'Sem autor' }}</p>
-                    <p class="text-sm">Destaque: {{ $book->pivot->featured ? 'Sim' : 'Não' }}.
-                        Posição: {{ $book->pivot->position ?? 'Não informada' }}.</p>
                 </li>
             @empty
                 <li>Nenhum livro associado a esta categoria.</li>

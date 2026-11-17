@@ -60,7 +60,6 @@ class BookController extends Controller
 
         $book->load(['author', 'detail']);
         $categories = $book->categories()
-            ->orderByPivot('position')
             ->orderBy('name')
             ->get();
 
