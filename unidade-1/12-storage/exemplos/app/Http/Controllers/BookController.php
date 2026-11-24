@@ -6,7 +6,6 @@ use App\Models\Author;
 use App\Models\Book;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
@@ -55,8 +54,25 @@ class BookController extends Controller
             'cover' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
         ]);
 
-        $book = new Book();
-        $this->saveWithCover($book, $validated, $request->file('cover'));
+        $coverPath = null;
+        if ($request->hasFile('cover')) {
+            $coverPath = $request->file('cover')->store('covers', 'public');
+
+            if ($coverPath === false) {
+                throw ValidationException::withMessages([
+                    'cover' => 'Não foi possível armazenar a capa.',
+                ]);
+            }
+        }
+
+        $validated['cover'] = $coverPath;
+
+        try {
+            $book = Book::create($validated);
+        } catch (Throwable $error) {
+            $this->deleteCover($coverPath);
+            throw $error;
+        }
 
         return redirect()->route('books.show', $book)->with('success', 'Livro cadastrado.');
     }
@@ -100,7 +116,33 @@ class BookController extends Controller
             'remove_cover' => ['sometimes', 'boolean'],
         ]);
 
-        $this->saveWithCover($book, $validated, $request->file('cover'), $request->boolean('remove_cover'));
+        $oldCoverPath = $book->cover;
+        unset($validated['cover'], $validated['remove_cover']);
+
+        if ($request->hasFile('cover')) {
+            $coverPath = $request->file('cover')->store('covers', 'public');
+
+            if ($coverPath === false) {
+                throw ValidationException::withMessages([
+                    'cover' => 'Não foi possível armazenar a capa.',
+                ]);
+            }
+
+            $validated['cover'] = $coverPath;
+        } elseif ($request->boolean('remove_cover')) {
+            $validated['cover'] = null;
+        }
+
+        try {
+            $book->update($validated);
+        } catch (Throwable $error) {
+            $this->deleteCover($validated['cover'] ?? null);
+            throw $error;
+        }
+
+        if ($book->cover !== $oldCoverPath) {
+            $this->deleteCover($oldCoverPath);
+        }
 
         return redirect()->route('books.show', $book)->with('success', 'Livro atualizado.');
     }
@@ -114,42 +156,6 @@ class BookController extends Controller
         $this->deleteCover($cover);
 
         return redirect()->route('books.index')->with('success', 'Livro excluído.');
-    }
-
-    private function saveWithCover(
-        Book $book,
-        array $data,
-        ?UploadedFile $image,
-        bool $removeCover = false,
-    ): void {
-        $oldPath = $book->cover;
-        $newPath = null;
-
-        if ($image !== null) {
-            $newPath = $image->store('covers', 'public');
-
-            if ($newPath === false) {
-                throw ValidationException::withMessages([
-                    'cover' => 'Não foi possível armazenar a capa.',
-                ]);
-            }
-        }
-
-        // O banco recebe o caminho gerado, não o arquivo nem o valor do checkbox.
-        unset($data['cover'], $data['remove_cover']);
-        $data['cover'] = $newPath ?? ($removeCover ? null : $oldPath);
-
-        try {
-            $book->fill($data)->save();
-        } catch (Throwable $error) {
-            // Se o banco rejeitar a gravação, descarte apenas o novo arquivo.
-            $this->deleteCover($newPath);
-            throw $error;
-        }
-
-        if ($data['cover'] !== $oldPath) {
-            $this->deleteCover($oldPath);
-        }
     }
 
     private function deleteCover(?string $path): void

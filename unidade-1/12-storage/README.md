@@ -93,7 +93,15 @@ As telas de cadastro e edição usam `enctype="multipart/form-data"` no formulá
 <input id="cover" name="cover" type="file" accept="image/jpeg,image/png,image/webp">
 ```
 
-`accept` ajuda na escolha no navegador. O [BookController](exemplos/app/Http/Controllers/BookController.php) valida de fato o upload no servidor: aceita JPG, PNG ou WebP, com até 2 MB. Quando há uma imagem válida, `$file->store('covers', 'public')` a grava em `storage/app/public/covers`. O nome gerado permite que dois livros recebam imagens enviadas com o mesmo nome original.
+`accept` ajuda na escolha no navegador. O [BookController](exemplos/app/Http/Controllers/BookController.php) valida o arquivo no servidor e aceita JPG, PNG ou WebP de até 2 MB.
+
+Depois da validação, as ações `store()` (cadastro) e `update()` (edição) usam `hasFile('cover')` para conferir se chegou uma imagem. As duas ações gravam o arquivo com a mesma chamada.
+
+```php
+$coverPath = $request->file('cover')->store('covers', 'public');
+```
+
+O Laravel gera um nome para a imagem, grava o arquivo em `storage/app/public/covers` e devolve um caminho como `covers/abc.jpg`. O Controller salva esse caminho no campo `cover` do livro.
 
 ### Trocar ou excluir uma capa
 
