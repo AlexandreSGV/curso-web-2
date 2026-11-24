@@ -34,11 +34,8 @@ Route::middleware('auth')->group(function () {
     Route::match(['put', 'patch'], '/users/{user}', [UserController::class, 'update'])
         ->can('update', 'user')->name('users.update');
 
-    // Administração de autores/categorias e demonstrações de desempenho.
-    // As rotas de medição vêm antes da rota /books/{book}.
+    // Administração de autores e categorias.
     Route::middleware('can:manage-catalog')->group(function () {
-        Route::get('/books/lazy-loading', [BookController::class, 'index_lazy_loading']);
-        Route::get('/books/eager-loading', [BookController::class, 'index_eager_loading']);
         Route::resource('authors', AuthorController::class);
         Route::resource('categories', CategoryController::class);
     });
