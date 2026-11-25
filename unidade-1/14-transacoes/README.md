@@ -36,8 +36,6 @@ Use `DB::transaction()` com uma função que reúne as gravações. Quando a fun
 
 Valide os dados do formulário antes de abrir a transação. Dentro da função, deixe sair a exceção que deve cancelar o cadastro. Você pode tratar o erro do lado de fora, depois do rollback.
 
-O Laravel também oferece `DB::beginTransaction()`, `DB::commit()` e `DB::rollBack()` para controlar cada etapa manualmente. [Controle manual na documentação](https://laravel.com/framework/docs/13.x/database#manually-using-transactions)
-
 ## 4. Cadastrar livro e detalhes juntos
 
 O [formulário de cadastro](exemplos/resources/views/books/create.blade.php) da biblioteca recebe os campos do livro, a quantidade de páginas e um resumo opcional. O livro vai para `books`, e os detalhes vão para `book_details`.
@@ -56,6 +54,27 @@ $book = DB::transaction(function () use ($bookData, $detailData): Book {
 O relacionamento `detail()` preenche `book_id` com o ID do livro recém-criado. Depois do commit, o Controller redireciona para a página do livro, que já exibe os detalhes.
 
 A capa continua opcional. Quando ela é enviada, o arquivo é gravado no disco e seu caminho é salvo no banco. Se a transação falhar, o banco desfaz as gravações e o Controller apaga o arquivo recém-enviado no `catch`.
+
+### Controle manual da transação
+
+O controle manual usa os mesmos dados validados do cadastro, `$bookData` e `$detailData`.
+
+```php
+DB::beginTransaction();
+
+try {
+    $book = Book::create($bookData);
+    $book->detail()->create($detailData);
+
+    DB::commit();
+} catch (\Throwable $error) {
+    DB::rollBack();
+
+    throw $error;
+}
+```
+
+`DB::beginTransaction()` inicia a transação. `DB::commit()` confirma as gravações do livro e dos detalhes. Se o bloco `try` lançar uma exceção, o `catch` chama `DB::rollBack()` para desfazer as alterações e repassa o erro ao Laravel com `throw $error`. [Controle manual na documentação do Laravel 13](https://laravel.com/framework/docs/13.x/database#manually-using-transactions)
 
 ## 5. Praticar
 
