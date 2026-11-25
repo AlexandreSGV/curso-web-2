@@ -52,7 +52,19 @@ Use Node.js 22 ou superior e abra [http://127.0.0.1:3000](http://127.0.0.1:3000)
 
 As telas Blade continuam disponíveis em [http://127.0.0.1:8000/login](http://127.0.0.1:8000/login). Cadastre ou troque arquivos de capa por lá. Os livros consultados pelo cliente Node mostram as capas cadastradas ou a imagem padrão.
 
-## 3. Conferir o contrato e experimentar requisições
+## 3. Como usar o arquivo OpenAPI
+
+Imagine que você vai montar a tela de livros e precisa responder a três perguntas: qual endereço consultar, como enviar o token e onde encontrar a lista na resposta? O [`openapi.yaml`](openapi.yaml) reúne essas informações. Ele é um arquivo de texto escrito em **YAML** e segue o padrão **OpenAPI**, que descreve como um programa pode conversar com uma API.
+
+Na biblioteca, esse arquivo é o **contrato entre o Laravel e o cliente**. As [rotas do Laravel](laravel/routes/api.php) encaminham as requisições aos controllers. O [JavaScript da tela](cliente-node/public/app.js) faz as chamadas. O YAML documenta o que os dois combinaram: não é preciso executá-lo nem copiá-lo para o projeto Laravel. Se a API mudar, atualize o contrato para que ele continue servindo de referência.
+
+**Para consultar o contrato, mesmo com o Laravel desligado:**
+
+1. Abra o [arquivo da aula](openapi.yaml) no GitHub e copie seu conteúdo. Abra o [Swagger Editor](https://editor.swagger.io/) e substitua o texto de exemplo pelo YAML copiado.
+2. Na documentação exibida, expanda **`GET /books`**. O caminho é somado ao endereço em `servers` (`http://127.0.0.1:8000/api`). Portanto, a tela deve consultar **`GET http://127.0.0.1:8000/api/books`**.
+3. Observe a autenticação e as respostas. A operação exige um token **Bearer**. Na resposta **200**, `data` contém a lista de livros; cada item tem campos como `title` e `author_name`. A resposta **401** indica que a API não recebeu um token válido.
+
+## 4. Comparar o contrato com a API em execução
 
 | Método e caminho | O que faz |
 |---|---|
@@ -84,4 +96,10 @@ curl -i http://127.0.0.1:8000/api/books \
   -H 'Authorization: Bearer COLE_O_TOKEN'
 ```
 
-O [arquivo OpenAPI](openapi.yaml) pode ser aberto no Swagger Editor para ler os campos e as respostas. Para testar com credenciais, use o cliente de aula, `curl` local ou uma Swagger UI servida por você. A listagem não usa paginação para manter a demonstração curta.
+Compare a resposta do segundo comando com a que você leu no Swagger Editor: o status deve ser **200** e a lista deve vir dentro de `data`. Agora repita a consulta sem o token:
+
+```bash
+curl -i -H 'Accept: application/json' http://127.0.0.1:8000/api/books
+```
+
+O status esperado é **401**. A URL é a mesma; o que mudou foi a identificação de quem fez o pedido.
