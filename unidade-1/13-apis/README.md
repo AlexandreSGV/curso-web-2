@@ -142,9 +142,13 @@ O Node.js entrega os arquivos da interface. O `fetch()` roda no navegador e cham
 - [BookResource](exemplos/laravel/app/Http/Resources/BookResource.php): escolhe os campos do livro na resposta. O resultado vem na chave `data`.
 - [JavaScript do cliente](exemplos/cliente-node/public/app.js): envia as requisições e monta a lista, os detalhes e o formulário de livros.
 
-No projeto de aula, `php artisan install:api` prepara `routes/api.php` e instala o Sanctum. O Model `User` usa `HasApiTokens`. A migration do Sanctum cria a tabela de tokens; o token em texto é retornado na emissão, e o banco guarda o hash. O login das telas Blade continua usando a sessão.
-
 A API lista e consulta capas da aula 12 pela URL. A criação e a edição via API trabalham com JSON: a capa nova é enviada pelas telas Blade. Excluir um livro pela API também remove sua capa do disco, pois as duas interfaces usam o mesmo evento de exclusão do Model.
+
+### O que o Sanctum faz?
+
+O **Laravel Sanctum** é um pacote de autenticação. Na biblioteca, o `TokenController` confere a senha e usa `createToken()` para emitir a credencial. Nas rotas protegidas, o middleware `auth:sanctum` verifica o token Bearer enviado no cabeçalho `Authorization` e identifica o usuário. A `BookPolicy` verifica quais operações ele pode realizar. [Documentação do Sanctum no Laravel 13](https://laravel.com/framework/docs/13.x/sanctum#api-token-authentication)
+
+O comando `php artisan install:api` instala o Sanctum e prepara `routes/api.php`. O Model `User` usa `HasApiTokens` para emitir tokens. A API devolve o token ao cliente na criação e o Sanctum guarda na tabela `personal_access_tokens` um **hash** para conferir a credencial nas próximas chamadas. As telas Blade usam o login por sessão do Laravel.
 
 ## 7. Praticar
 
@@ -154,5 +158,7 @@ Siga o [guia de execução](exemplos/README.md). Abra a aba **Rede** das ferrame
 2. Cadastre um livro e confira o status 201. Edite o título e confirme que ele mudou também nas telas Blade.
 3. Saia e entre como cliente. Confira o acesso à consulta e a ausência das ações de edição. Como administrador, exclua um livro de teste.
 4. Acompanhe a requisição de saída: a API responde 204, sem JSON no corpo.
+
+Você também pode repetir as requisições pelo Postman Web. [Roteiro de teste com Postman Web](exemplos/README.md#5-testar-a-api-com-o-postman-web)
 
 Referências: [REST, capítulo 5 de Roy Fielding](https://www.ics.uci.edu/~fielding/pubs/dissertation/rest_arch_style.htm), [MDN — métodos HTTP](https://developer.mozilla.org/pt-BR/docs/Web/HTTP/Reference/Methods), [OpenAPI](https://spec.openapis.org/oas/v3.0.3), [Swagger UI](https://swagger.io/tools/swagger-ui/), [Redoc](https://redocly.com/docs/redoc), [Laravel 13 — Routing](https://laravel.com/docs/13.x/routing) e [Sanctum](https://laravel.com/docs/13.x/sanctum).

@@ -61,6 +61,8 @@ Use Node.js 22 ou superior e abra [http://127.0.0.1:3000](http://127.0.0.1:3000)
 
 As telas Blade continuam disponíveis em [http://127.0.0.1:8000/login](http://127.0.0.1:8000/login). Cadastre ou troque arquivos de capa por lá. Os livros consultados pelo cliente Node mostram as capas cadastradas ou a imagem padrão.
 
+Veja como o servidor Node.js entrega a página e onde o JavaScript faz as chamadas à API. [README do cliente Node.js](cliente-node/README.md)
+
 ## 3. Como usar o arquivo OpenAPI
 
 Imagine que você vai montar a tela de livros e precisa responder a três perguntas: qual endereço consultar, como enviar o token e onde encontrar a lista na resposta? O [`openapi.yaml`](openapi.yaml) reúne essas informações. Ele é um arquivo de texto escrito em **YAML** e segue o padrão **OpenAPI**, que descreve como um programa pode conversar com uma API.
@@ -112,3 +114,56 @@ curl -i -H 'Accept: application/json' http://127.0.0.1:8000/api/books
 ```
 
 O status esperado é **401**. A URL é a mesma; o que mudou foi a identificação de quem fez o pedido.
+
+## 5. Testar a API com o Postman Web
+
+### Preparar o acesso local
+
+1. Inicie o Laravel na porta `8000` seguindo a [preparação do Laravel](#1-preparar-o-laravel). O endereço base da API é `http://127.0.0.1:8000/api`.
+2. Abra o Postman no navegador, entre na sua conta e abra seu espaço de trabalho. [Postman Web](https://go.postman.co/)
+3. Instale e abra o **Postman Desktop Agent** no computador. Abra o seletor de agentes no rodapé do Postman Web, desative **Auto-select** se estiver ativo e escolha **Desktop Agent**. Ele envia as requisições a partir da sua máquina e alcança a API local. [Instalação e seleção do agente](https://learning.postman.com/docs/getting-started/basics/about-postman-agent/)
+
+### Obter o token
+
+1. No espaço de trabalho, clique em **+** e escolha **HTTP** para criar a requisição. Selecione **POST** e informe `http://127.0.0.1:8000/api/tokens`. [Criar uma requisição no Postman](https://learning.postman.com/latest-v-12/docs/use/send-requests/create-requests/request-basics#create-a-new-request)
+2. Na aba **Headers**, adicione a chave `Accept` com o valor `application/json`.
+3. Na aba **Body**, selecione **raw** e escolha **JSON** na lista de formatos. Cole os dados da conta de aula.
+
+   ```json
+   {
+     "email": "admin@example.com",
+     "password": "senha-aula-123"
+   }
+   ```
+
+4. Clique em **Send**. Confira o status **201 Created** e copie o valor inteiro do campo `token`, sem as aspas.
+
+### Consultar os livros com o token
+
+1. Crie uma requisição **GET** para `http://127.0.0.1:8000/api/books`.
+2. Na aba **Authorization**, escolha **Bearer Token** em **Auth Type** e cole o valor recebido no campo **Token**. O Postman monta o cabeçalho `Authorization` com esse valor. [Bearer Token no Postman](https://learning.postman.com/docs/use/send-requests/authorization/authorization-types/#bearer-token)
+3. Adicione `Accept: application/json` em **Headers** e clique em **Send**. A resposta **200 OK** traz os livros em `data`.
+
+### Cadastrar, editar e excluir um livro de teste
+
+Repita a configuração de **Headers** e **Authorization** nas próximas requisições.
+
+1. Envie **GET** para `http://127.0.0.1:8000/api/authors` e anote o `id` de um autor da resposta.
+2. Envie **POST** para `http://127.0.0.1:8000/api/books`. Em **Body**, use **raw** e **JSON**. Ajuste `author_id` para o autor que você consultou e use um ISBN de 13 dígitos ainda livre.
+
+   ```json
+   {
+     "title": "Livro de teste do Postman",
+     "isbn": "9780000000025",
+     "published_year": 2024,
+     "author_id": 1
+   }
+   ```
+
+3. Confira o status **201 Created** e anote o `data.id` do livro de teste.
+4. Envie **PUT** para `http://127.0.0.1:8000/api/books/{id}`, trocando `{id}` pelo número anotado. Use os mesmos campos do JSON e altere o título. A resposta **200 OK** deve mostrar o novo título.
+5. Use a mesma URL e envie **DELETE** com o token e sem corpo. Confira o status **204 No Content**.
+
+### Revogar o token
+
+Envie **DELETE** para `http://127.0.0.1:8000/api/tokens/current` com o mesmo Bearer Token e confira o status **204 No Content**. Repita a listagem de livros com esse token para conferir o status **401 Unauthorized**.

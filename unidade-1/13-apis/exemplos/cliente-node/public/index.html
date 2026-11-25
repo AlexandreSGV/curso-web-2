@@ -6,6 +6,7 @@
     <title>Biblioteca | Cliente da API</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <link rel="stylesheet" href="/style.css">
+    <!-- defer faz o script rodar depois que o navegador lê os elementos do HTML. -->
     <script src="/app.js" defer></script>
 </head>
 <body class="bg-slate-100 text-slate-900">
@@ -20,6 +21,7 @@
             <button>Entrar</button>
         </form>
 
+        <!-- O JavaScript mostra a biblioteca assim que o login é aceito. -->
         <section id="library" class="space-y-4" hidden>
             <div class="panel">
                 <p id="account"></p>
@@ -29,6 +31,7 @@
                 </div>
             </div>
 
+            <!-- O cadastro e a edição compartilham os campos deste formulário. -->
             <form id="book-form" class="panel" hidden>
                 <h2 id="form-title" class="text-lg font-semibold"></h2>
                 <label>Título <input name="title" maxlength="255" required></label>

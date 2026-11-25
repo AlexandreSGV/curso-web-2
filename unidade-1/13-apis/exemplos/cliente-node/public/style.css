@@ -1,3 +1,4 @@
+/* O JavaScript usa o atributo hidden para alternar as áreas visíveis da página. */
 [hidden] { display: none !important; }
 
 .panel {
@@ -25,5 +26,6 @@ button {
     padding: .35rem .65rem;
 }
 
+/* A área de mensagens aparece quando o JavaScript preenche seu texto. */
 #message:empty { display: none; }
 #message[data-error="true"] { color: #991b1b; }
