@@ -4,15 +4,24 @@
 
 ## 1. Preparar o Laravel
 
-Na pasta que contém o repositório `curso-web-2`, crie o projeto ao lado:
+Na pasta que contém o repositório `curso-web-2`, crie um projeto Laravel 13 ao lado. O Composer já faz parte do [ambiente da disciplina](../../../apoio/ambiente-web2-wsl/).
 
 ```bash
-laravel new biblioteca-api
+composer create-project laravel/laravel biblioteca-api "13.*"
+```
+
+Se estiver usando o instalador do Laravel, execute `laravel new biblioteca-api` e escolha um projeto sem starter kit, Blade quando solicitado e SQLite.
+
+Entre na pasta do projeto e prepare a API.
+
+```bash
 cd biblioteca-api
 php artisan install:api --without-migration-prompt
 ```
 
-Use Laravel 13, sem starter kit, Blade quando solicitado e SQLite. O último comando prepara o Sanctum, registra `routes/api.php` no bootstrap e publica a migration de tokens. A opção adia a execução das migrations até depois da cópia. Se a migration `create_personal_access_tokens_table` não aparecer em `database/migrations/`, execute `php artisan vendor:publish --tag=sanctum-migrations` antes de migrar.
+O comando prepara o Sanctum, registra `routes/api.php` no bootstrap e publica a migration de tokens. A opção adia a execução das migrations até depois da cópia. Se a migration `create_personal_access_tokens_table` não aparecer em `database/migrations/`, execute `php artisan vendor:publish --tag=sanctum-migrations` antes de migrar.
+
+O projeto novo usa SQLite por padrão. Se você usar MySQL, crie um banco vazio e ajuste `DB_CONNECTION=mysql`, `DB_HOST`, `DB_PORT`, `DB_DATABASE`, `DB_USERNAME` e `DB_PASSWORD` no `.env` antes de rodar as migrations.
 
 No terminal Linux ou WSL, ainda na pasta `biblioteca-api`:
 
