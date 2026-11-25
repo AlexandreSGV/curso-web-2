@@ -17,6 +17,7 @@ Materiais da disciplina de Desenvolvimento para Web II.
 11. [Autenticação e autorização no Laravel](unidade-1/11-autenticacao-autorizacao/)
 12. [Storage no Laravel: capas de livros](unidade-1/12-storage/)
 13. [APIs na Web: REST e Laravel](unidade-1/13-apis/)
+14. [Transações no Laravel](unidade-1/14-transacoes/)
 
 ## Projeto da disciplina
 

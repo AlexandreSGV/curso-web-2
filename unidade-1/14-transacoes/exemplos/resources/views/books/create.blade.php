@@ -1,0 +1,19 @@
+@extends('layouts.app')
+
+@section('title', 'Cadastrar livro')
+
+@section('content')
+    <form method="POST" action="{{ route('books.store') }}" enctype="multipart/form-data" class="space-y-4">
+        @csrf
+        @include('books._form')
+
+        <fieldset class="space-y-3 rounded border border-slate-300 p-3">
+            <legend class="px-1 font-medium">Detalhes do livro</legend>
+            @include('book-details._form', ['pagesRequired' => true])
+        </fieldset>
+
+        <button type="submit" @disabled($authors->isEmpty())
+            class="rounded bg-blue-700 px-4 py-2 text-white disabled:opacity-50">Cadastrar</button>
+        <a href="{{ route('books.index') }}" class="ml-3 text-blue-700 underline">Cancelar</a>
+    </form>
+@endsection
